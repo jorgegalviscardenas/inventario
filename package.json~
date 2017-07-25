@@ -3,14 +3,16 @@
   "version": "0.0.1",
   "description": "Inventario para locales de comida",
   "private": true,
-  "main": "server.js",
+  "main": "app.js",
   "dependencies": {
     "body-parser": "~1.10.1",
     "express": "~4.x",
     "helmet": "^2.0.0",
     "mongoose": "4.2.3",
     "mongoose-auto-increment": "5.0.1",
-    "multiparty": "^4.1.2"
+    "multiparty": "^4.1.2",
+    "jwt-simple": "^0.5.0",
+    "moment": "^2.13.0"
   },
   "scripts": {
     "start": "node app.js"
