@@ -1,0 +1,7 @@
+/**
+ * Valores a exportar para la configuracion del envio de emails
+ */
+module.exports = {
+    email:'jorgegalcad@gmail.com',
+    password: 'jorge123'
+};

@@ -1,0 +1,11 @@
+/**
+ * Valores  de configuracion a exportar para la base de datos
+ */
+module.exports = {
+    USER_NAME: '',
+    PASSWORD:'',
+    HOST:'localhost',
+    PORT: '27017',
+    DB_NAME:'frankieDB'
+    
+};

@@ -1,12 +1,20 @@
 {
-  "name": "openshift-cartridge-nodejs-template",
-  "version": "1.0.1",
-  "description": "Custom Node.js cartridge for OpenShift - sample application",
+  "name": "inventario",
+  "version": "0.0.1",
+  "description": "Inventario para locales de comida",
   "private": true,
-  "main": "start.js",
-  "scripts": {
-    "start": "node --use_strict start.js"
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "~1.10.1",
+    "express": "~4.x",
+    "helmet": "^2.0.0",
+    "mongoose": "4.2.3",
+    "mongoose-auto-increment": "5.0.1",
+    "multiparty": "^4.1.2"
   },
-  "author": "Ionut-Cristian Florescu <ionut.florescu@gmail.com>",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "Jorge Galvis Cardenas",
   "license": "ISC"
 }

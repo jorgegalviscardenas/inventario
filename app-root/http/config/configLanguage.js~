@@ -1,0 +1,7 @@
+/**
+* Configura el idioma, y el archivo donde estan losmensajes en ese respectivo idioma
+*/
+module.exports={
+ path:'./app-root/http/languages/en/messages.po',
+ domain:'en'
+}
