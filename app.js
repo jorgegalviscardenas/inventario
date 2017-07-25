@@ -2,11 +2,13 @@
 var env = process.env;
 var express = require('express');
 var config = require('./app-root/http/config/configToken.js');
+var cors = require('cors')
 var app = express();
 var crypto=require('crypto');
 //establecemos xcss-protection
 var helmet = require('helmet');
 app.use(helmet());
+app.use(cors())
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

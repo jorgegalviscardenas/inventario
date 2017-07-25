@@ -33,6 +33,7 @@ function Usuario()
   */
   this.auth = function(request, callback)
   {
+    console.log(request.body);
     if (request.body.email)
     {
       if (request.body.contrasenia)
@@ -43,20 +44,13 @@ function Usuario()
           {
             if (user)
             {
-              if (user.stateUserId != 2)
+              var passwordCode = cifrarContrasenia(request.body.email, request.body.contrasenia);
+              if (passwordCode == user.contrasenia)
               {
-                var passwordCode = cifrarContrasenia(request.body.email, request.body.contrasenia);
-                if (passwordCode == user.password)
-                {
-                  callback(null, {token: service.createToken(user), user: user});
-                }
-                else {
-                  callback({message:'Incorrect password',code:1}, null)
-                }
+                callback(null, {token: service.createToken(user), user: user});
               }
-              else
-              {
-                callback({message:'User blocked',code:2}, null)
+              else {
+                callback({message:'Incorrect password',code:1}, null)
               }
             }
             else {
