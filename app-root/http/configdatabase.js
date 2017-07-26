@@ -64,7 +64,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  tipoUsuarioSchema.plugin(autoIncrement.plugin, {model: 'tipo_usuario', field: 'id', startAt: 2});
+  tipoUsuarioSchema.plugin(autoIncrement.plugin, {model: 'tipo_usuario', field: 'id', startAt: 3});
   var modelTipoUsuario = connection.model('tipo_usuario', tipoUsuarioSchema);
   /////////////////////////////////////////////////////////////////////////////////
   var permisoSchema=new Schema({
@@ -85,7 +85,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  localSchema.plugin(autoIncrement.plugin, {model: 'local', field: 'id', startAt: 1});
+  localSchema.plugin(autoIncrement.plugin, {model: 'local', field: 'id', startAt: 6});
   var modelLocal=connection.model('local', localSchema);
   /////////////////////////////////////////////////////////////////////////////////
   var usuarioSchema = new Schema({

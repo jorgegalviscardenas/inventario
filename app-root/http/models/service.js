@@ -23,7 +23,7 @@ exports.createToken = function(user) {
 exports.decodeToken = function(request)
 {
     var token = request.headers.authorization.split(" ")[1];
-    var payload = jwt.decode(token, config.TOKEN_SECRET);
+    var payload = jwt.decode(token, config.TOKEN_SECRET,false, 'HS256');
     return payload;
 }
 /**

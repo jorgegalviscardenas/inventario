@@ -7,10 +7,9 @@ function Categoria()
   * Crea una nueva categoria
   * @param files donde vienen las imagenes
   * @param fields los campos
-  * @param idUsuario identificador del usuario que hace la peticion
   * @param callback función para comunicar el resultado
   */
-  this.crearCategoria=function(files,fields,idUsuario,callback)
+  this.crearCategoria=function(files,fields,callback)
   {
     var keys=Object.keys(files);
     var fils=new Array();
@@ -22,7 +21,6 @@ function Categoria()
     var updatedAt=new Date(Date.now());
     if(fields.nombre && fields.id_local)
     {
-      else {
         var newData={nombre:fields.nombre[0],id_local:fields.id_local[0],createdAt:createdAt,updatedAt:updatedAt};
         var categoria=new db.Categoria(newData);
         categoria.save(function(error,dta)
@@ -64,7 +62,6 @@ function Categoria()
             }
           }
         });
-      }
     }
     else {
       callback(new Error("Los campos de nombre y local son requeridos"),400,null);
@@ -106,7 +103,7 @@ function Categoria()
       {
         if(categoria)
         {
-          var data={};
+          var data={updatedAt:new Date(Date.now())};
           if(fields.nombre)
           {
             data.nombre=fields.nombre[0];
@@ -134,9 +131,9 @@ function Categoria()
               {
                 f.eliminarArchivo(categoria.ruta_imagen,function(e,d)
                 {
-                  f.agregarArchivo('public/categorias/',dta.id+ext,fi,function(e,d)
+                  f.agregarArchivo('public/categorias/',categoria.id+ext,fi,function(e,d)
                   {
-                    data.ruta_imagen='categorias/'+dta.id+ext;
+                    data.ruta_imagen='categorias/'+categoria.id+ext;
                     db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
                     {
                       callback(error,200,Object.assign(categoria,data));
@@ -145,9 +142,9 @@ function Categoria()
                 });
               }
               else {
-                f.agregarArchivo('public/categorias/',dta.id+ext,fi,function(e,d)
+                f.agregarArchivo('public/categorias/',categoria.id+ext,fi,function(e,d)
                 {
-                  data.ruta_imagen='categorias/'+dta.id+ext;
+                  data.ruta_imagen='categorias/'+categoria.id+ext;
                   db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
                   {
                     callback(error,200,Object.assign(categoria,data));
@@ -160,8 +157,10 @@ function Categoria()
             }
           }
           else {
-
-            callback(error,201,dta);
+            db.Categoria.update({id:producto.id},{$set:data},function(e,d)
+            {
+              callback(error,200,Object.assign(Categoria,data));
+            });
           }
         }
         else {
@@ -174,8 +173,8 @@ function Categoria()
     });
   }
   /**
-  * Elimina la categoria asociada al id y al id del usuario
-  * @param idCategoria identificador del cliente en la base de datos
+  * Elimina la categoria asociada al id
+  * @param idCategoria identificador de la categoria en la base de datos
   * @param callback función para comunicar el resultado
   */
   this.eliminarCategoria=function(idCategoria,callback)
