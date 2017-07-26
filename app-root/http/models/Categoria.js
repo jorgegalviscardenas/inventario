@@ -11,6 +11,10 @@ function Categoria()
   */
   this.crearCategoria=function(files,fields,callback)
   {
+    console.log("files");
+    console.log(files);
+    console.log("campos");
+    console.log(fields);
     var keys=Object.keys(files);
     var fils=new Array();
     for (i=0 ; i < keys.length; i++)
