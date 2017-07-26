@@ -81,7 +81,7 @@ var conexion = function()
     ciudad:{type:String,default:''},
     telefono:{type:String,default:''},
     direccion:{type:String,default:''},
-    creado_por:{type: Number, ref: 'usuario'},
+    creado_por:{type: Number, ref: 'usuario',default:1},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
