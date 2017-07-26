@@ -42,11 +42,11 @@ function Categoria()
             var nameFile=fi.originalFilename;
             var extParts=nameFile.split(".");
             var ext=extParts[extParts.length-1];
-            f.agregarArchivo('public/categorias/',dta.id+ext,fi,function(e,d)
+            f.agregarArchivo('public/categorias/',dta.id+"."+ext,fi,function(e,d)
             {
-              db.Categoria.update({id:dta.id},{$set:{ruta_imagen:'categorias/'+dta.id+ext}},function(e,d)
+              db.Categoria.update({id:dta.id},{$set:{ruta_imagen:'categorias/'+dta.id+"."+ext}},function(e,d)
               {
-                dta.ruta_imagen='categorias/'+dta.id+ext;
+                dta.ruta_imagen='categorias/'+dta.id+"."+ext;
                 callback(error,201,dta)
               });
               f.eliminarArchivo(fi.path,function(e,d){})
