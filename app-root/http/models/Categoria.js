@@ -11,8 +11,7 @@ function Categoria()
   */
   this.crearCategoria=function(files,fields,callback)
   {
-    console.log("files");
-    console.log(files);
+
     console.log("campos");
     console.log(fields);
     var keys=Object.keys(files);
@@ -21,6 +20,8 @@ function Categoria()
     {
       fils.push(files[keys[i]][0]);
     }
+    console.log("files");
+    console.log(fils[0].headers);
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
     if(fields.nombre && fields.id_local)
