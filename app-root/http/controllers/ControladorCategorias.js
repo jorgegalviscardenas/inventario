@@ -25,7 +25,8 @@ exports.agregarCategoria = function(request, response)
       });
     }
     else {
-      response.status(400).send({error:error.message});
+      console.log(err);
+      response.status(400).send({error:err.message});
     }
   });
 
