@@ -63,23 +63,18 @@ function Producto()
                 {
                   var f=require('./File.js')();
                   var fi=fils[0];
-                  if(fi.headers['content-type']=='image/jpeg' || fi.headers['content-type']=='image/jpg' || fi.headers['content-type']=='image/png')
+                  var nameFile=fi.originalFilename;
+                  var extParts=nameFile.split(".");
+                  var ext=extParts[extParts.length-1];
+                  f.agregarArchivo('public/productos/',dta.id+"."+ext,fi,function(e,d)
                   {
-                    var nameFile=fi.originalFilename;
-                    var extParts=nameFile.split(".");
-                    var ext=extParts[extParts.length-1];
-                    f.agregarArchivo('public/productos/',dta.id+ext,fi,function(e,d)
+                    db.Producto.update({id:dta.id},{$set:{ruta_imagen:'productos/'+dta.id+"."+ext}},function(e,d)
                     {
-                      db.Producto.update({id:dta.id},{$set:{ruta_imagen:'productos/'+dta.id+ext}},function(e,d)
-                      {
-                        dta.ruta_imagen='productos/'+dta.id+ext;
-                        callback(error,201,dta)
-                      });
+                      dta.ruta_imagen='productos/'+dta.id+"."+ext;
+                      callback(error,201,dta)
                     });
-                  }
-                  else {
-                    callback(new Error("Debe ser un formato de imagen"),400,dta);
-                  }
+                    f.eliminarArchivo(fi.path,function(e,d){})
+                  });
                 }
                 else {
                   callback(error,201,dta);
@@ -179,26 +174,13 @@ function Producto()
               {
                 var f=require('./File.js')();
                 var fi=fils[0];
-                if(fi.headers['content-type']=='image/jpeg' || fi.headers['content-type']=='image/jpg' || fi.headers['content-type']=='image/png')
+                var nameFile=fi.originalFilename;
+                var extParts=nameFile.split(".");
+                var ext=extParts[extParts.length-1];
+                if(producto.ruta_imagen!='productos/imagenPorDefecto.png')
                 {
-                  var nameFile=fi.originalFilename;
-                  var extParts=nameFile.split(".");
-                  var ext=extParts[extParts.length-1];
-                  if(producto.ruta_imagen!='productos/imagenPorDefecto.png')
+                  f.eliminarArchivo(producto.ruta_imagen,function(e,d)
                   {
-                    f.eliminarArchivo(producto.ruta_imagen,function(e,d)
-                    {
-                      f.agregarArchivo('public/productos/',producto.id+ext,fi,function(e,d)
-                      {
-                        data.ruta_imagen='productos/'+producto.id+ext;
-                        db.Producto.update({id:producto.id},{$set:data},function(e,d)
-                        {
-                          callback(error,200,Object.assign(producto,data));
-                        });
-                      });
-                    });
-                  }
-                  else {
                     f.agregarArchivo('public/productos/',producto.id+ext,fi,function(e,d)
                     {
                       data.ruta_imagen='productos/'+producto.id+ext;
@@ -206,11 +188,20 @@ function Producto()
                       {
                         callback(error,200,Object.assign(producto,data));
                       });
+                      f.eliminarArchivo(fi.path,function(e,d){})
                     });
-                  }
+                  });
                 }
                 else {
-                  callback(new Error("Debe ser un formato de imagen"),400,producto);
+                  f.agregarArchivo('public/productos/',producto.id+ext,fi,function(e,d)
+                  {
+                    data.ruta_imagen='productos/'+producto.id+ext;
+                    db.Producto.update({id:producto.id},{$set:data},function(e,d)
+                    {
+                      callback(error,200,Object.assign(producto,data));
+                    });
+                    f.eliminarArchivo(fi.path,function(e,d){})
+                  });
                 }
               }
               else {

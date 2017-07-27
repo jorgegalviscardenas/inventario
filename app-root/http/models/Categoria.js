@@ -124,9 +124,9 @@ function Categoria()
             {
               f.eliminarArchivo(categoria.ruta_imagen,function(e,d)
               {
-                f.agregarArchivo('public/categorias/',categoria.id+ext,fi,function(e,d)
+                f.agregarArchivo('public/categorias/',categoria.id+"."+ext,fi,function(e,d)
                 {
-                  data.ruta_imagen='categorias/'+categoria.id+ext;
+                  data.ruta_imagen='categorias/'+categoria.id+"."+ext;
                   db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
                   {
                     callback(error,200,Object.assign(categoria,data));
@@ -136,9 +136,9 @@ function Categoria()
               });
             }
             else {
-              f.agregarArchivo('public/categorias/',categoria.id+ext,fi,function(e,d)
+              f.agregarArchivo('public/categorias/',categoria.id+"."+ext,fi,function(e,d)
               {
-                data.ruta_imagen='categorias/'+categoria.id+ext;
+                data.ruta_imagen='categorias/'+categoria.id+"."+ext;
                 db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
                 {
                   callback(error,200,Object.assign(categoria,data));
@@ -176,6 +176,11 @@ function Categoria()
       {
         if(categoria)
         {
+          var f=require('./File.js')();
+          if(categoria.ruta_imagen!='categorias/imagenPorDefecto.png')
+          {
+            f.eliminarArchivo('public/'+categoria.ruta_imagen,function(e,d){});
+          }
           db.Categoria.remove({id:idCategoria},function(error,dta)
           {
             if(error)
