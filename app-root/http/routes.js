@@ -16,7 +16,7 @@ var localesCtrl=require('./controllers/ControladorLocales.js');
 var productosCtrl=require('./controllers/ControladorProductos.js');
 var proveedoresCtrl=require('./controllers/ControladorProveedores.js');
 var subcategoriasCtrl=require('./controllers/ControladorSubcategorias.js');
-
+var usuariosCtrl=require('./controllers/ControladorUsuarios.js');
 //definimos los middlewares
 var middlewareAuth = require('./middleware/MiddlewareAuth.js');
 //rutas
@@ -51,6 +51,11 @@ router.post('/subcategorias',middlewareAuth.ensureAuthenticated,subcategoriasCtr
 router.get('/subcategorias',middlewareAuth.ensureAuthenticated,subcategoriasCtrl.obtenerSubcategorias);
 router.put('/subcategorias/:id',middlewareAuth.ensureAuthenticated,subcategoriasCtrl.actualizarSubcategoria);
 router.delete('/subcategorias/:id',middlewareAuth.ensureAuthenticated,subcategoriasCtrl.eliminarSubcategoria);
+//USUARIOS
+router.post('/usuarios',middlewareAuth.ensureAuthenticated,usuariosCtrl.agregarUsuario);
+router.get('/usuarios',middlewareAuth.ensureAuthenticated,usuariosCtrl.obtenerUsuarios);
+router.put('/usuarios/:id',middlewareAuth.ensureAuthenticated,usuariosCtrl.actualizarUsuario);
+router.delete('/usuarios/:id',middlewareAuth.ensureAuthenticated,usuariosCtrl.eliminarUsuario);
 /////////////-----PRUEBAS-------//////////
 router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,response)
 {

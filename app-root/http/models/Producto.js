@@ -22,7 +22,6 @@ function Producto()
     if(fields.nombre && fields.id_local && fields.precio_entrada && fields.precio_salida
       && fields.unidad)
       {
-        else {
           var newData={nombre:fields.nombre[0],id_local:fields.id_local[0],
             precio_entrada:fields.precio_entrada[0],precio_salida:fields.precio_salida[0]
             ,unidad:fields.unidad[0],createdAt:createdAt,updatedAt:updatedAt};
@@ -47,18 +46,17 @@ function Producto()
               newData.presentacion=fields.presentacion[0];
             }
             var producto=new db.Producto(newData);
-            producto.save(function(error,dta)
+            producto.save(function(error,dta1)
             {
-              if(dta)
-              {
-                delete dta.__v;
-                delete dta._id;
-              }
+
               if(error)
               {
                 callback(error,400,null);
               }
               else {
+                var dta=dta1.toObject();
+                delete dta.__v;
+                delete dta._id;
                 if(fils.length>0)
                 {
                   var f=require('./File.js')();
@@ -81,7 +79,6 @@ function Producto()
                 }
               }
             });
-          }
         }
         else {
           callback(new Error("Los campos de nombre, local, precio entrada, precio salida y unidad son requeridos"),400,null);

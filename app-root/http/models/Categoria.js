@@ -23,13 +23,9 @@ function Categoria()
     {
       var newData={nombre:fields.nombre[0],id_local:fields.id_local[0],createdAt:createdAt,updatedAt:updatedAt};
       var categoria=new db.Categoria(newData);
-      categoria.save(function(error,dta)
+      categoria.save(function(error,dta1)
       {
-        if(dta)
-        {
-          delete dta.__v;
-          delete dta._id;
-        }
+
         if(error)
         {
           callback(error,400,null);
@@ -37,6 +33,9 @@ function Categoria()
         else {
           if(fils.length>0)
           {
+            var dta=dta1.toObject();
+            delete dta.__v;
+            delete dta._id;
             var f=require('./File.js')();
             var fi=fils[0];
             var nameFile=fi.originalFilename;

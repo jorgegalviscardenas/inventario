@@ -1,3 +1,6 @@
+/**
+* Representa un usuario
+*/
 function Usuario()
 {
   var service = require('./service.js');
@@ -8,86 +11,104 @@ function Usuario()
   * @param idUsuario identificador del usuario que hace la peticion
   * @param callback función para comunicar el resultado
   */
-  this.crearCliente=function(data,idUsuario,callback)
+  this.crearUsuario=function(data,idUsuario,callback)
   {
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
     if(data.nombre && data.apellido && data.email && data.nombre_usuario)
     {
+      var pass;
       if(data.contrasenia)
       {
         if(data.contrasenia.trim()!="")
         {
+          pass=cifrarContrasenia(data.email,data.contrasenia.trim());
 
         }
+        else {
+          pass=cifrarContrasenia(data.email,'123');
+        }
       }else {
-
+        pass=cifrarContrasenia(data.email,'123');
       }
       var newData={nombre:data.nombre,apellido:data.apellido,email:data.email,
-        telefono:data.telefono,direccion:data.direccion,createdAt:createdAt,
-        updatedAt:updatedAt,cliente_de:idUsuario};
-        var cliente=new db.Cliente(newData);
-        cliente.save(function(error,dta)
+        nombre_usuario:data.nombre_usuario,createdAt:createdAt,
+        updatedAt:updatedAt,usuario_de:idUsuario};
+        db.Usuario.findOne({email:data.email},function(error,user)
         {
-          if(dta)
+          if(user)
           {
-            delete dta.__v;
-            delete dta._id;
+            callback(new Error("El email del usuario ya se encuentra registrado"),400,null);
           }
-          var code=201;
-          if(error)
-          {
-            code=400;
+          else {
+            var usuario=new db.Usuario(newData);
+            usuario.save(function(error,dta1)
+            {
+              var dta;
+              if(dta1)
+              {
+                dta=dta1.toObject();
+                delete dta.__v;
+                delete dta._id;
+                delete dta.contrasenia;
+              }
+              var code=201;
+              if(error)
+              {
+                code=400;
+              }
+              callback(error,code,dta);
+            });
           }
-          callback(error,code,dta);
         });
+
       }
       else {
-        callback(new Error("Los campos de nombre, apellido, email, telefono y dirección son requeridos"),400,null);
+        callback(new Error("Los campos de nombre, apellido, email, nombre usuario son requeridos"),400,null);
       }
     }
     /**
-    * Obtiene los clientes asociados al usuario
-    * @param idUsuario identificador del usuario que solicita los clientes
+    * Obtiene los usuarios del usuario
+    * @param idUsuario identificador del usuario que solicita los usuarios
     * @param callback función para comunicar el resultado
     */
-    this.obtenerClientes=function(idUsuario,callback)
+    this.obtenerUsuarios=function(idUsuario,callback)
     {
-      db.Cliente.find({cliente_de: idUsuario},{__v:0,_id:0},{sort: {id: 1}}, function(error, clientes)
+      db.Usuario.find({usuario_de: idUsuario},{__v:0,_id:0},{sort: {id: 1}}, function(error, usuarios)
       {
-        callback(error, clientes);
+        callback(error, usuarios);
       });
     }
     /**
-    * Actualiza el cliente asociado al id, y al identificador del usuario
-    * @param idCliente identificador del cliente en la base de datos
+    * Actualiza el usuario al id, y al identificador del usuario
+    * @param idUs identificador del  usuario en la base de datos
     * @param idUsuario identificador del usuario en la base de datos
     * @param data   información a actualizar
     * @param callback función para comunicar el resultado
     */
-    this.actualizarCliente=function(idCliente,idUsuario,data,callback)
+    this.actualizarUsuario=function(idUs,idUsuario,data,callback)
     {
-      db.Cliente.findOne({id:idCliente,cliente_de: idUsuario},{__v:0,_id:0},function(error, cliente)
+      db.Usuario.findOne({id:idUs,usuario_de: idUsuario},{__v:0,_id:0},function(error, usuario)
       {
         if(!error)
         {
-          if(cliente)
+          if(usuario)
           {
             data.updatedAt=new Date(Date.now());
-            db.Cliente.update({id:idCliente},{$set:data},function(error,dta)
+            db.Usuario.update({id:idUs},{$set:data},function(error,dta)
             {
               if(error)
               {
                 callback(error,400,null);
               }
               else {
-                cliente=Object.assign(cliente,data);
-                callback(error,200,cliente);
+                usuario=Object.assign(usuario,data);
+                callback(error,200,usuario);
               }
             });
           }
           else {
-            callback(new Error("Cliente no encontrado"),404,null);
+            callback(new Error("Usuario no encontrado"),404,null);
           }
         }
         else {
@@ -96,32 +117,32 @@ function Usuario()
       });
     }
     /**
-    * Elimina el cliente asociado al id y al id del usuario
-    * @param idCliente identificador del cliente en la base de datos
+    * Elimina el usuario asociado al id y al id del usuario
+    * @param idUs identificador del usuario en la base de datos
     * @param idUsuario identificador del usuario
     * @param callback función para comunicar el resultado
     */
-    this.eliminarCliente=function(idCliente,idUsuario,callback)
+    this.eliminarUsuario=function(idUs,idUsuario,callback)
     {
-      db.Cliente.findOne({id:idCliente,cliente_de: idUsuario},{__v:0,_id:0},function(error, cliente)
+      db.Usuario.findOne({id:idUs,usuario_de: idUsuario},{__v:0,_id:0},function(error, usuario)
       {
         if(!error)
         {
-          if(cliente)
+          if(usuario)
           {
-            db.Cliente.remove({id:idCliente},function(error,dta)
+            db.Usuario.remove({id:idUs},function(error,dta)
             {
               if(error)
               {
                 callback(error,400,null);
               }
               else {
-                callback(error,200,cliente);
+                callback(error,200,usuario);
               }
             });
           }
           else {
-            callback(new Error("Cliente no encontrado"),404,null);
+            callback(new Error("Usuario no encontrado"),404,null);
           }
         }
         else {

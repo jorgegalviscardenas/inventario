@@ -97,7 +97,8 @@ var conexion = function()
     activo:{type:Boolean, default:true},
     id_tipo_usuario:{type: Number, ref: 'tipo_usuario',default:1},
     permisos:{type:[Number],default:[]},
-    locales:{type:[Number],default:[]},
+    es_administrador:{type:Boolean,default:false},
+    usuario_de:{type:Number, default:-1},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });

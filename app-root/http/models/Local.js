@@ -19,10 +19,12 @@ function Local()
         telefono:data.telefono,direccion:data.direccion,createdAt:createdAt,
         updatedAt:updatedAt,creado_por:idUsuario};
         var local=new db.Local(newData);
-        local.save(function(error,dta)
+        local.save(function(error,dta1)
         {
-          if(dta)
+          var dta;
+          if(dta1)
           {
+            dta=dta1.toObject();
             delete dta.__v;
             delete dta._id;
           }

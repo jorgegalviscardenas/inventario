@@ -17,12 +17,14 @@ function Proveedor()
     {
       var newData={nombre:data.nombre,apellido:data.apellido,email:data.email,
         telefono:data.telefono,direccion:data.direccion,createdAt:createdAt,
-        updatedAt:updatedAt,cliente_de:idUsuario};
+        updatedAt:updatedAt,proveedor_de:idUsuario};
         var proveedor=new db.Proveedor(newData);
-        proveedor.save(function(error,dta)
+        proveedor.save(function(error,dta1)
         {
-          if(dta)
+          var dta;
+          if(dta1)
           {
+            dta=dta1.toObject();
             delete dta.__v;
             delete dta._id;
           }

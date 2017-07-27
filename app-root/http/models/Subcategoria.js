@@ -17,10 +17,12 @@ function Subcategoria()
     {
       var newData={nombre:data.nombre,id_local:data.id_local,createdAt:createdAt,updatedAt:updatedAt};
         var subcategoria=new db.Subcategoria(newData);
-        subcategoria.save(function(error,dta)
+        subcategoria.save(function(error,dta1)
         {
-          if(dta)
+          var dta;
+          if(dta1)
           {
+            dta=dta1.toObject();
             delete dta.__v;
             delete dta._id;
           }
