@@ -148,7 +148,7 @@ function Categoria()
             }
           }
           else {
-            db.Categoria.update({id:producto.id},{$set:data},function(e,d)
+            db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
             {
               callback(error,200,Object.assign(Categoria,data));
             });
