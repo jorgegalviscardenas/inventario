@@ -157,7 +157,7 @@ function Usuario()
     {
       db.Usuario.remove({},function(error,data)
       {
-        var em='jorgegalcad@gmail.com';
+        var em='j';
         var pa='123'
         var con=cifrarContrasenia(em,pa);
         var us=new db.Usuario({id:1,email:em,contrasenia:con});
