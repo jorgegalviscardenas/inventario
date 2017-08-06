@@ -221,7 +221,7 @@ function Subcategoria()
               let ca=data[i];
               producto.obtenerProductosDeSubcategoria(ca.id,function(error,dta)
               {
-                cate.push({nombre:ca.nombre,id_local:ca.id_local,id_categoria:ca.id_categoria,
+                cate.push({id:ca.id,nombre:ca.nombre,id_local:ca.id_local,id_categoria:ca.id_categoria,
                   ruta_imagen:ca.ruta_imagen,productos:dta});
                   if(cate.length==data.length)
                   {
