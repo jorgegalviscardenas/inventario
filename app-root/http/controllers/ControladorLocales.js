@@ -92,7 +92,7 @@ exports.eliminarLocal=function(request,response)
 exports.obtenerLocalesDeEmpresa=function(request,response)
 {
   var local= require('../models/Local.js')();
-  local.obtenerLocalesDeEmpresa(request.params.id,function(error,code,data)
+  local.obtenerLocalesDeEmpresa(request.params.id,function(error,data)
   {
     if (!error)
     {
