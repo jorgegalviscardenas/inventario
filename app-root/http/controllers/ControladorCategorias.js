@@ -80,7 +80,7 @@ exports.actualizarCategoria=function(request,response)
       });
     }
     else {
-      response.status(400).send({error:error.message});
+      response.status(400).send({error:err.message});
     }
   });
 }

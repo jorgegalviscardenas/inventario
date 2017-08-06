@@ -25,7 +25,7 @@ exports.agregarProducto = function(request, response)
       });
     }
     else {
-      response.status(400).send({error:error.message});
+      response.status(400).send({error:err.message});
     }
   });
 
@@ -79,7 +79,7 @@ exports.actualizarProducto=function(request,response)
       });
     }
     else {
-      response.status(400).send({error:error.message});
+      response.status(400).send({error:err.message});
     }
   });
 }
