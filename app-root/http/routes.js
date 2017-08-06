@@ -62,6 +62,8 @@ router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
 router.get('/cliente/locales/:id/categorias',categoriasCtrl.obtenerCategoriasDeLocal);
 router.get('/cliente/categorias/:id/subcategorias',subcategoriasCtrl.obtenerSubcategoriasDeCategoria);
 router.get('/cliente/subcategorias/:id/productos',productosCtrl.obtenerProductosDeSubcategoria);
+router.get('/cliente/subcategorias/:id',subcategoriasCtrl.obtenerSubcategoria);
+router.get('/cliente/categorias/:id',categoriasCtrl.obtenerCategoria);
 /////////////-----PRUEBAS-------//////////
 router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,response)
 {

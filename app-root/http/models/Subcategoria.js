@@ -239,6 +239,30 @@ function Subcategoria()
           }
         });
       }
+      /**
+      * Obtiene la subcategoria asociada al id
+      * @param idSubcategoria identificador de la subcategoria
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerSubcategoria=function(idSubcategoria,callback)
+      {
+        db.Subcategoria.findOne({id:idSubcategoria},{__v:0,_id:0},function(error,dta)
+        {
+          if(!error)
+          {
+            if(dta)
+            {
+              callback(error,200,dta);
+            }
+            else {
+              callback(new Error("Subcategoria no encontrada"),404,null);
+            }
+          }
+          else {
+            callback(error,400,null);
+          }
+        });
+      }
       return this;
     }
     module.exports=Subcategoria;

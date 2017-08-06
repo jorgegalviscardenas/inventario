@@ -125,3 +125,23 @@ exports.obtenerSubcategoriasDeCategoria=function(request,response)
     }
   });
 }
+/**
+* Controla la obtención de una subcategoria
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerSubcategoria=function(request,response)
+{
+  var subcategoria= require('../models/Subcategoria.js')();
+  subcategoria.obtenerSubcategoria(request.params.id,function(error,code,data)
+  {
+    if (!error)
+    {
+      response.status(code).send(data);
+    }
+    else
+    {
+      response.status(code).send({error: error.message});
+    }
+  });
+}

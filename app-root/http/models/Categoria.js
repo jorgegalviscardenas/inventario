@@ -212,6 +212,30 @@ function Categoria()
       callback(error,data);
     });
   }
+  /**
+  * Obtiene la categoria asociada al id
+  * @param idCategoria el identificador de la categoria
+  * @param callback función para comunicar el resultado
+  */
+  this.obtenerCategoria=function(idCategoria,callback)
+  {
+    db.Categoria.findOne({id:idCategoria},{__v:0,_id:0},function(error,dta)
+    {
+      if(!error)
+      {
+        if(dta)
+        {
+          callback(error,200,dta);
+        }
+        else {
+          callback(new Error("Categoria no encontrada"),404,null);
+        }
+      }
+      else {
+        callback(error,400,null);
+      }
+    });
+  }
   return this;
 }
 module.exports=Categoria;

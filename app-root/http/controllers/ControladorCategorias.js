@@ -124,3 +124,23 @@ exports.obtenerCategoriasDeLocal=function(request,response)
     }
   });
 }
+/**
+* Control al aobtnecion de una categoria
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerCategoria=function(request,response)
+{
+  var categoria= require('../models/Categoria.js')();
+  categoria.obtenerCategoria(request.params.id,function(error,code,data)
+  {
+    if (!error)
+    {
+      response.status(code).send(data);
+    }
+    else
+    {
+      response.status(code).send({error: error.message});
+    }
+  });
+}
