@@ -149,7 +149,7 @@ function Categoria()
           else {
             db.Categoria.update({id:categoria.id},{$set:data},function(e,d)
             {
-              callback(error,200,Object.assign(Categoria,data));
+              callback(error,200,Object.assign(categoria,data));
             });
           }
         }
@@ -198,6 +198,18 @@ function Categoria()
       else {
         callback(error,400,null);
       }
+    });
+  }
+  /**
+  * Obtiene las categorias de un local
+  * @param idLocal identificador del local
+  * @param callback función para comunicar el resultado
+  */
+  this.obtenerCategoriasDeLocal=function(idLocal,callback)
+  {
+    db.Categoria.find({id_local:idLocal},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+    {
+      callback(error,data);
     });
   }
   return this;

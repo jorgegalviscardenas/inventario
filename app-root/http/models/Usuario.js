@@ -155,25 +155,34 @@ function Usuario()
     */
     this.porDefecto=function()
     {
-      db.Usuario.remove({},function(error,data)
+      db.Empresa.remove({},function(error,data)
       {
-        var em='j';
-        var pa='123'
-        var con=cifrarContrasenia(em,pa);
-        var us=new db.Usuario({id:1,email:em,contrasenia:con});
-        us.save(function(error,dta){
-
-        });
-      });
-      db.Local.remove({},function(error,dta)
-      {
-        var loc=new db.Local({nombre:"Local ejemplo",departamento:"Caldas",ciudad:"Manizales",
-        telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
-        loc.save(function(error,dta)
+        var e=new db.Empresa({id:1,nombre:"Empresa 1",createdAt:new Date(Date.now()),
+        updatedAt:new Date(Date.now())});
+        e.save(function(error,dta)
         {
+          db.Usuario.remove({},function(error,data)
+          {
+            var em='j';
+            var pa='123'
+            var con=cifrarContrasenia(em,pa);
+            var us=new db.Usuario({id:1,email:em,contrasenia:con});
+            us.save(function(error,dta){
 
+            });
+          });
+          db.Local.remove({},function(error,dta)
+          {
+            var loc=new db.Local({nombre:"Local ejemplo",departamento:"Caldas",ciudad:"Manizales",
+            telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
+            loc.save(function(error,dta)
+            {
+
+            });
+          });
         });
       });
+
     }
     /**
     * Cifra la contraseña que recibimos por parametro

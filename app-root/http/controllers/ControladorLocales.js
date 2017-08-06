@@ -84,3 +84,23 @@ exports.eliminarLocal=function(request,response)
     }
   });
 }
+/**
+* Controla la obtención de los locales asociados a una empresa
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerLocalesDeEmpresa=function(request,response)
+{
+  var local= require('../models/Local.js')();
+  local.obtenerLocalesDeEmpresa(request.params.id,function(error,code,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
+    }
+  });
+}

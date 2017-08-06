@@ -75,12 +75,21 @@ var conexion = function()
   permisoSchema.plugin(autoIncrement.plugin, {model: 'permiso', field: 'id', startAt: 1});
   var modelPermiso=connection.model('permiso', permisoSchema);
   /////////////////////////////////////////////////////////////////////////////////
+  var empresaSchema=new Schema({
+    nombre:String,
+    createdAt: {type: Date, default: Date.now()},
+    updatedAt: {type: Date, default: Date.now()}
+  });
+  empresaSchema.plugin(autoIncrement.plugin, {model: 'empresa', field: 'id', startAt: 5});
+  var modelEmpresa=connection.model('empresa', empresaSchema);
+  /////////////////////////////////////////////////////////////////////////////////
   var localSchema=new Schema({
     nombre:{type:String,default:''},
     departamento:{type:String,default:''},
     ciudad:{type:String,default:''},
     telefono:{type:String,default:''},
     direccion:{type:String,default:''},
+    id_empresa:{type: Number, ref: 'empresa',default:1},
     creado_por:{type: Number, ref: 'usuario',default:1},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
@@ -144,6 +153,8 @@ var conexion = function()
   var subcategoriaSchema = new Schema({
     nombre: {type:String,default:''},
     id_local:{type:Number,ref:'local'},
+    id_categoria:{type:Number,ref:'categoria'},
+    ruta_imagen:{type:String,default:'subcategorias/imagenPorDefecto.png'},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
@@ -152,7 +163,6 @@ var conexion = function()
   ////////////////////////////////////////////////////////////////////////////
   var productoSchema = new Schema({
     nombre: {type:String,default:''},
-    id_categoria:{type:Number,ref:'categoria'},
     id_subcategoria:{type:Number,ref:'subcategoria'},
     descripcion:{type:String,default:''},
     precio_entrada:{type:Number,default:0.0},
@@ -186,7 +196,8 @@ var conexion = function()
     Proveedor: modelProveedor,
     Categoria: modelCategoria,
     Subcategoria:modelSubcategoria,
-    Producto:modelProducto
+    Producto:modelProducto,
+    Empresa:modelEmpresa
     // agregar más modelos aquí en caso de haberlos
   };
 }

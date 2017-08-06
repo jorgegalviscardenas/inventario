@@ -104,3 +104,23 @@ exports.eliminarCategoria=function(request,response)
     }
   });
 }
+/**
+* Controla la obteneción de las categorias del local
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerCategoriasDeLocal=function(request,response)
+{
+  var categoria= require('../models/Categoria.js')();
+  categoria.obtenerCategoriasDeLocal(request.params.id,function(error,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
+    }
+  });
+}

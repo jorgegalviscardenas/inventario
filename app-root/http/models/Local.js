@@ -123,6 +123,18 @@ function Local()
         }
       });
     }
+    /**
+    * Obtiene los locales asociados al id de la empresa
+    * @param idEmpresa identificador de la empresa
+    * @calback función para comunicar el resultado
+    */
+    this.obtenerLocalesDeEmpresa=function(idEmpresa,callback)
+    {
+      db.Local.find({id_empresa:idEmpresa},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+      {
+        callback(error,data);
+      });
+    }
     return this;
   }
   module.exports=Local;

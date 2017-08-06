@@ -5,37 +5,61 @@ function Subcategoria()
 {
   /**
   * Crea una nueva subcategoria
-  * @param data la información de la subcategoria a crear
-  * @param idUsuario identificador del usuario que hace la peticion
+  * @param files donde vienen las imagenes
+  * @param fields los campos
   * @param callback función para comunicar el resultado
   */
-  this.crearSubcategoria=function(data,idUsuario,callback)
+  this.crearSubcategoria=function(files,fields,callback)
   {
+    var keys=Object.keys(files);
+    var fils=new Array();
+    for (i=0 ; i < keys.length; i++)
+    {
+      fils.push(files[keys[i]][0]);
+    }
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
-    if(data.nombre && data.id_local)
+    if(fields.nombre && fields.id_local && fields.id_categoria)
     {
-      var newData={nombre:data.nombre,id_local:data.id_local,createdAt:createdAt,updatedAt:updatedAt};
-        var subcategoria=new db.Subcategoria(newData);
-        subcategoria.save(function(error,dta1)
+      var newData={nombre:fields.nombre[0],id_categoria:fields.id_categoria[0],
+        id_local:fields.id_local[0],createdAt:createdAt,updatedAt:updatedAt};
+        var categoria=new db.Subcategoria(newData);
+        categoria.save(function(error,dta1)
         {
-          var dta;
-          if(dta1)
-          {
-            dta=dta1.toObject();
-            delete dta.__v;
-            delete dta._id;
-          }
-          var code=201;
+
           if(error)
           {
-            code=400;
+            callback(error,400,null);
           }
-          callback(error,code,dta);
+          else {
+            if(fils.length>0)
+            {
+              var dta=dta1.toObject();
+              delete dta.__v;
+              delete dta._id;
+              var f=require('./File.js')();
+              var fi=fils[0];
+              var nameFile=fi.originalFilename;
+              var extParts=nameFile.split(".");
+              var ext=extParts[extParts.length-1];
+              f.agregarArchivo('public/subcategorias/',dta.id+"."+ext,fi,function(e,d)
+              {
+                db.Categoria.update({id:dta.id},{$set:{ruta_imagen:'subcategorias/'+dta.id+"."+ext}},function(e,d)
+                {
+                  dta.ruta_imagen='subcategorias/'+dta.id+"."+ext;
+                  callback(error,201,dta)
+                });
+                f.eliminarArchivo(fi.path,function(e,d){})
+              });
+            }
+            else {
+              callback(error,201,dta);
+            }
+          }
         });
       }
       else {
-        callback(new Error("Los campos de nombre y local son requeridos"),400,null);
+        callback(new Error("Los campos de nombre, local y categoria son requeridos"),400,null);
       }
     }
     /**
@@ -62,29 +86,77 @@ function Subcategoria()
     /**
     * Actualiza la subcategoria asociada al id
     * @param idSubcategoria identificador de la subcategoria en la base de datos
-    * @param data   información a actualizar
+    * @param files  imagen a actualizar
+    * @param fields   información a actualizar
     * @param callback función para comunicar el resultado
     */
-    this.actualizarSubcategoria=function(idSubcategoria,data,callback)
+    this.actualizarSubcategoria=function(idSubcategoria,files,fields,callback)
     {
-      db.Subcategoria.findOne({id:idSubcategoria},{__v:0,_id:0},function(error, subcategoria)
+      db.Subategoria.findOne({id:idSubcategoria},{__v:0,_id:0},function(error, subcategoria)
       {
         if(!error)
         {
           if(subcategoria)
           {
-            data.updatedAt=new Date(Date.now());
-            db.Subcategoria.update({id:idSubcategoria},{$set:data},function(error,dta)
+            var data={updatedAt:new Date(Date.now())};
+            if(fields.nombre)
             {
-              if(error)
+              data.nombre=fields.nombre[0];
+            }
+            if(fields.id_local)
+            {
+              data.id_local=fields.id_local[0];
+            }
+            if(fields.id_categoria)
+            {
+              data.id_categoria=fields.id_categoria[0];
+            }
+            var keys=Object.keys(files);
+            var fils=new Array();
+            for (i=0 ; i < keys.length; i++)
+            {
+              fils.push(files[keys[i]][0]);
+            }
+            if(fils.length>0)
+            {
+              var f=require('./File.js')();
+              var fi=fils[0];
+              var nameFile=fi.originalFilename;
+              var extParts=nameFile.split(".");
+              var ext=extParts[extParts.length-1];
+              if(subcategoria.ruta_imagen!='subcategorias/imagenPorDefecto.png')
               {
-                callback(error,400,null);
+                f.eliminarArchivo(subcategoria.ruta_imagen,function(e,d)
+                {
+                  f.agregarArchivo('public/subcategorias/',subcategoria.id+"."+ext,fi,function(e,d)
+                  {
+                    data.ruta_imagen='subcategorias/'+subcategoria.id+"."+ext;
+                    db.Subcategoria.update({id:subcategoria.id},{$set:data},function(e,d)
+                    {
+                      callback(error,200,Object.assign(subcategoria,data));
+                    });
+                    f.eliminarArchivo(fi.path,function(e,d){})
+                  });
+                });
               }
               else {
-                subcategoria=Object.assign(subcategoria,data);
-                callback(error,200,subcategoria);
+                f.agregarArchivo('public/subcategorias/',subcategoria.id+"."+ext,fi,function(e,d)
+                {
+                  data.ruta_imagen='subcategorias/'+subcategoria.id+"."+ext;
+                  db.Subcategoria.update({id:subcategoria.id},{$set:data},function(e,d)
+                  {
+                    callback(error,200,Object.assign(subcategoria,data));
+                  });
+                  f.eliminarArchivo(fi.path,function(e,d){})
+                });
               }
-            });
+            }
+            else {
+              db.Subcategoria.update({id:subcategoria.id},{$set:data},function(e,d)
+              {
+                callback(error,200,Object.assign(subcategoria,data));
+              });
+            }
           }
           else {
             callback(new Error("Subcategoria no encontrada"),404,null);
@@ -128,6 +200,44 @@ function Subcategoria()
         }
       });
     }
-    return this;
-  }
-  module.exports=Subcategoria;
+    /**
+    * Obtiene las subcategorias de la categoria
+    * @param idCategoria identificador de la categoria
+    * @param callback función para comunicar el resultado
+    */
+    this.obtenerSubcategoriasDeCategoria=function(idCategoria,callback)
+    {
+      db.Subcategoria.find({id_categoria:idCategoria},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+      {
+        if(!error)
+        {
+          if(data.length>0)
+          {
+            var cate=new Array();
+            var producto=require('./Producto.js')();
+            for(var i=0;i<data.length;i++)
+            {
+              let ca=data[i];
+              producto.obtenerProductosDeSubcategoria(ca.id,function(error,dta)
+              {
+                cate.push({nombre:ca.nombre,id_local:ca.id_local,id_categoria:ca.id_categoria,
+                  ruta_imagen:ca.ruta_imagen,productos:dta});
+                  if(cate.length==data.length)
+                  {
+                    callback(null,cate);
+                  }
+                });
+              }
+            }
+            else {
+              callback(error,data);
+            }
+          }
+          else {
+            callback(error,[]);
+          }
+        });
+      }
+      return this;
+    }
+    module.exports=Subcategoria;

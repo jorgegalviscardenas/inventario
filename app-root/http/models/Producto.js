@@ -20,68 +20,64 @@ function Producto()
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
     if(fields.nombre && fields.id_local && fields.precio_entrada && fields.precio_salida
-      && fields.unidad)
+      && fields.unidad && fields.id_subcategoria)
       {
-          var newData={nombre:fields.nombre[0],id_local:fields.id_local[0],
-            precio_entrada:fields.precio_entrada[0],precio_salida:fields.precio_salida[0]
-            ,unidad:fields.unidad[0],createdAt:createdAt,updatedAt:updatedAt};
-            if(fields.id_categoria)
-            {
-              newData.id_categoria=fields.id_categoria[0];
-            }
-            if(fields.id_subcategoria)
-            {
-              newData.id_subcategoria=fields.id_subcategoria[0];
-            }
-            if(fields.descripcion)
-            {
-              newData.descripcion=fields.descripcion[0];
-            }
-            if(fields.minima_inventario)
-            {
-              newData.minima_inventario=fields.minima_inventario[0];
-            }
-            if(fields.presentacion)
-            {
-              newData.presentacion=fields.presentacion[0];
-            }
-            var producto=new db.Producto(newData);
-            producto.save(function(error,dta1)
-            {
+        var newData={nombre:fields.nombre[0],id_local:fields.id_local[0],
+          precio_entrada:fields.precio_entrada[0],precio_salida:fields.precio_salida[0]
+          ,unidad:fields.unidad[0],createdAt:createdAt,updatedAt:updatedAt};
+          if(fields.id_subcategoria)
+          {
+            newData.id_subcategoria=fields.id_subcategoria[0];
+          }
+          if(fields.descripcion)
+          {
+            newData.descripcion=fields.descripcion[0];
+          }
+          if(fields.minima_inventario)
+          {
+            newData.minima_inventario=fields.minima_inventario[0];
+          }
+          if(fields.presentacion)
+          {
+            newData.presentacion=fields.presentacion[0];
+          }
+          var producto=new db.Producto(newData);
+          producto.save(function(error,dta1)
+          {
 
-              if(error)
+            if(error)
+            {
+              callback(error,400,null);
+            }
+            else {
+              var dta=dta1.toObject();
+              delete dta.__v;
+              delete dta._id;
+              if(fils.length>0)
               {
-                callback(error,400,null);
+                var f=require('./File.js')();
+                var fi=fils[0];
+                var nameFile=fi.originalFilename;
+                var extParts=nameFile.split(".");
+                var ext=extParts[extParts.length-1];
+                f.agregarArchivo('public/productos/',dta.id+"."+ext,fi,function(e,d)
+                {
+                  db.Producto.update({id:dta.id},{$set:{ruta_imagen:'productos/'+dta.id+"."+ext}},function(e,d)
+                  {
+                    dta.ruta_imagen='productos/'+dta.id+"."+ext;
+                    callback(error,201,dta)
+                  });
+                  f.eliminarArchivo(fi.path,function(e,d){})
+                });
               }
               else {
-                var dta=dta1.toObject();
-                delete dta.__v;
-                delete dta._id;
-                if(fils.length>0)
-                {
-                  var f=require('./File.js')();
-                  var fi=fils[0];
-                  var nameFile=fi.originalFilename;
-                  var extParts=nameFile.split(".");
-                  var ext=extParts[extParts.length-1];
-                  f.agregarArchivo('public/productos/',dta.id+"."+ext,fi,function(e,d)
-                  {
-                    db.Producto.update({id:dta.id},{$set:{ruta_imagen:'productos/'+dta.id+"."+ext}},function(e,d)
-                    {
-                      dta.ruta_imagen='productos/'+dta.id+"."+ext;
-                      callback(error,201,dta)
-                    });
-                    f.eliminarArchivo(fi.path,function(e,d){})
-                  });
-                }
-                else {
-                  callback(error,201,dta);
-                }
+                callback(error,201,dta);
               }
-            });
+            }
+          });
         }
         else {
-          callback(new Error("Los campos de nombre, local, precio entrada, precio salida y unidad son requeridos"),400,null);
+          callback(new Error("Los campos de nombre, local, precio entrada, precio salida, subcategoria y unidad son requeridos"),400,null);
         }
       }
       /**
@@ -140,10 +136,6 @@ function Producto()
               if(fields.unidad)
               {
                 data.unidad=fields.unidad[0];
-              }
-              if(fields.id_categoria)
-              {
-                data.id_categoria=fields.id_categoria[0];
               }
               if(fields.id_subcategoria)
               {
@@ -248,6 +240,18 @@ function Producto()
           else {
             callback(error,400,null);
           }
+        });
+      }
+      /**
+      * Obtiene los productos de la subcategoria
+      * @param idSubcategoria identificador de la subcategoria
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerProductosDeSubcategoria=function(idSubcategoria,callback)
+      {
+        db.Producto.find({id_subcategoria:idSubcategoria},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+        {
+          callback(error,data);
         });
       }
       return this;

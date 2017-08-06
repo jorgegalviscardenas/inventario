@@ -8,14 +8,25 @@ exports.agregarSubcategoria = function(request, response)
   var service = require('../models/service.js');
   var payload = service.decodeToken(request);
   var subcategoria= require('../models/Subcategoria.js')();
-  subcategoria.crearSubcategoria(request.body,payload.id,function(error,code,data)
-  {
-    if(error)
+  var multiparty = require('multiparty');
+  var form = new multiparty.Form();
+  form.parse(request, function(err, fields, files) {
+    if(!err)
     {
-      response.status(code).send({error:error.message});
+      subcategoria.crearSubcategoria(files,fields,function(error,code,data)
+      {
+        if(error)
+        {
+          response.status(code).send({error:error.message});
+        }
+        else {
+          response.status(code).send(data);
+        }
+      });
     }
     else {
-      response.status(code).send(data);
+      console.log(err);
+      response.status(400).send({error:err.message});
     }
   });
 }
@@ -51,14 +62,24 @@ exports.actualizarSubcategoria=function(request,response)
   var service = require('../models/service.js');
   var payload = service.decodeToken(request);
   var subcategoria= require('../models/Subcategoria.js')();
-  subcategoria.actualizarCliente(request.params.id,request.body,function(error,code,data)
-  {
-    if(error)
+  var multiparty = require('multiparty');
+  var form = new multiparty.Form();
+  form.parse(request, function(err, fields, files) {
+    if(!err)
     {
-      response.status(code).send({error:error.message});
+      subcategoria.actualizarCliente(request.params.id,files,fields,function(error,code,data)
+      {
+        if(error)
+        {
+          response.status(code).send({error:error.message});
+        }
+        else {
+          response.status(code).send(data);
+        }
+      });
     }
     else {
-      response.status(code).send(data);
+      response.status(400).send({error:err.message});
     }
   });
 }
@@ -81,6 +102,26 @@ exports.eliminarSubcategoria=function(request,response)
     else
     {
       response.status(code).send({error: error.message});
+    }
+  });
+}
+/**
+* Obtiene las categorias asociadas a una categoria
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerSubcategoriasDeCategoria=function(request,response)
+{
+  var subcategoria= require('../models/Subcategoria.js')();
+  subcategoria.obtenerSubcategoriasDeCategoria(request.params.id,function(error,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
     }
   });
 }
