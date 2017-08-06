@@ -32,11 +32,12 @@ function Subcategoria()
             callback(error,400,null);
           }
           else {
+            var dta=dta1.toObject();
+            delete dta.__v;
+            delete dta._id;
             if(fils.length>0)
             {
-              var dta=dta1.toObject();
-              delete dta.__v;
-              delete dta._id;
+
               var f=require('./File.js')();
               var fi=fils[0];
               var nameFile=fi.originalFilename;
