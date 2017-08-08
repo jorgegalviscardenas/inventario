@@ -121,7 +121,7 @@ function Categoria()
             var ext=extParts[extParts.length-1];
             if(categoria.ruta_imagen!='categorias/imagenPorDefecto.png')
             {
-              f.eliminarArchivo(categoria.ruta_imagen,function(e,d)
+              f.eliminarArchivo('public/'+categoria.ruta_imagen,function(e,d)
               {
                 f.agregarArchivo('public/categorias/',categoria.id+"."+ext,fi,function(e,d)
                 {

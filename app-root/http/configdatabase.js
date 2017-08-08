@@ -91,6 +91,7 @@ var conexion = function()
     direccion:{type:String,default:''},
     id_empresa:{type: Number, ref: 'empresa',default:1},
     creado_por:{type: Number, ref: 'usuario',default:1},
+    ruta_imagen:{type:String,default:'locales/imagenPorDefecto.png'},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });

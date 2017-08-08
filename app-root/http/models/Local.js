@@ -5,35 +5,59 @@ function Local()
 {
   /**
   * Crea un nuevo local
-  * @param data la información del local a crear
   * @param idUsuario identificador del usuario que hace la peticion
+  * @param files donde vienen las imagenes
+  * @param fields los campos
   * @param callback función para comunicar el resultado
   */
-  this.crearLocal=function(data,idUsuario,callback)
+  this.crearLocal=function(files,fields,idUsuario,callback)
   {
+    var keys=Object.keys(files);
+    var fils=new Array();
+    for (i=0 ; i < keys.length; i++)
+    {
+      fils.push(files[keys[i]][0]);
+    }
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
-    if(data.nombre && data.departamento && data.ciudad && data.telefono && data.direccion)
+    if(fields.nombre && fields.departamento && fields.ciudad && fields.telefono && fields.direccion)
     {
-      var newData={nombre:data.nombre,departamento:data.departamento,ciudad:data.ciudad,
-        telefono:data.telefono,direccion:data.direccion,createdAt:createdAt,
+      var newData={nombre:fields.nombre[0],departamento:fields.departamento[0],ciudad:fields.ciudad[0],
+        telefono:fields.telefono[0],direccion:fields.direccion[0],createdAt:createdAt,
         updatedAt:updatedAt,creado_por:idUsuario};
         var local=new db.Local(newData);
         local.save(function(error,dta1)
         {
-          var dta;
-          if(dta1)
-          {
-            dta=dta1.toObject();
-            delete dta.__v;
-            delete dta._id;
-          }
-          var code=201;
+
           if(error)
           {
-            code=400;
+            callback(error,400,null);
           }
-          callback(error,code,dta);
+          else {
+            var dta=dta1.toObject();
+            delete dta.__v;
+            delete dta._id;
+            if(fils.length>0)
+            {
+              var f=require('./File.js')();
+              var fi=fils[0];
+              var nameFile=fi.originalFilename;
+              var extParts=nameFile.split(".");
+              var ext=extParts[extParts.length-1];
+              f.agregarArchivo('public/locales/',dta.id+"."+ext,fi,function(e,d)
+              {
+                db.Local.update({id:dta.id},{$set:{ruta_imagen:'locales/'+dta.id+"."+ext}},function(e,d)
+                {
+                  dta.ruta_imagen='locales/'+dta.id+"."+ext;
+                  callback(error,201,dta)
+                });
+                f.eliminarArchivo(fi.path,function(e,d){})
+              });
+            }
+            else {
+              callback(error,201,dta);
+            }
+          }
         });
       }
       else {
@@ -54,12 +78,13 @@ function Local()
     }
     /**
     * Actualiza el local asociado al id, y al identificador del usuario
+    * @param files donde vienen las imagenes
+    * @param fields los campos
     * @param idLocal identificador del local en la base de datos
     * @param idUsuario identificador del usuario en la base de datos
-    * @param data   información a actualizar
     * @param callback función para comunicar el resultado
     */
-    this.actualizarLocal=function(idLocal,idUsuario,data,callback)
+    this.actualizarLocal=function(files,fields,idLocal,idUsuario,callback)
     {
       db.Local.findOne({id:idLocal,creado_por: idUsuario},{__v:0,_id:0},function(error, local)
       {
@@ -67,18 +92,73 @@ function Local()
         {
           if(local)
           {
-            data.updatedAt=new Date(Date.now());
-            db.Local.update({id:idLocal},{$set:data},function(error,dta)
+            var data={updatedAt:new Date(Date.now())};
+            if(fields.nombre)
             {
-              if(error)
+              data.nombre=fields.nombre[0];
+            }
+            if(fields.departamento)
+            {
+              data.departamento=fields.departamento[0];
+            }
+            if(fields.ciudad)
+            {
+              data.ciudad=fields.ciudad[0];
+            }
+            if(fields.telefono)
+            {
+              data.telefono=fields.telefono[0];
+            }
+            if(fields.direccion)
+            {
+              data.direccion=fields.direccion[0];
+            }
+            var keys=Object.keys(files);
+            var fils=new Array();
+            for (i=0 ; i < keys.length; i++)
+            {
+              fils.push(files[keys[i]][0]);
+            }
+            if(fils.length>0)
+            {
+              var f=require('./File.js')();
+              var fi=fils[0];
+              var nameFile=fi.originalFilename;
+              var extParts=nameFile.split(".");
+              var ext=extParts[extParts.length-1];
+              if(local.ruta_imagen!='locales/imagenPorDefecto.png')
               {
-                callback(error,400,null);
+                f.eliminarArchivo('public/'+local.ruta_imagen,function(e,d)
+                {
+                  f.agregarArchivo('public/locales/',local.id+"."+ext,fi,function(e,d)
+                  {
+                    data.ruta_imagen='locales/'+local.id+"."+ext;
+                    db.Local.update({id:local.id},{$set:data},function(e,d)
+                    {
+                      callback(error,200,Object.assign(local,data));
+                    });
+                    f.eliminarArchivo(fi.path,function(e,d){})
+                  });
+                });
               }
               else {
-                local=Object.assign(local,data);
-                callback(error,200,local);
+                f.agregarArchivo('public/locales/',local.id+"."+ext,fi,function(e,d)
+                {
+                  data.ruta_imagen='locales/'+local.id+"."+ext;
+                  db.Local.update({id:local.id},{$set:data},function(e,d)
+                  {
+                    callback(error,200,Object.assign(local,data));
+                  });
+                  f.eliminarArchivo(fi.path,function(e,d){})
+                });
               }
-            });
+            }
+            else {
+              db.Local.update({id:local.id},{$set:data},function(e,d)
+              {
+                callback(error,200,Object.assign(local,data));
+              });
+            }
           }
           else {
             callback(new Error("Local no encontrado"),404,null);

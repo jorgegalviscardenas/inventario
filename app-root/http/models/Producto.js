@@ -168,7 +168,7 @@ function Producto()
                 var ext=extParts[extParts.length-1];
                 if(producto.ruta_imagen!='productos/imagenPorDefecto.png')
                 {
-                  f.eliminarArchivo(producto.ruta_imagen,function(e,d)
+                  f.eliminarArchivo('public/'+producto.ruta_imagen,function(e,d)
                   {
                     f.agregarArchivo('public/productos/',producto.id+ext,fi,function(e,d)
                     {

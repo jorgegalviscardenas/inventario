@@ -127,7 +127,7 @@ function Subcategoria()
               var ext=extParts[extParts.length-1];
               if(subcategoria.ruta_imagen!='subcategorias/imagenPorDefecto.png')
               {
-                f.eliminarArchivo(subcategoria.ruta_imagen,function(e,d)
+                f.eliminarArchivo('public/'+subcategoria.ruta_imagen,function(e,d)
                 {
                   f.agregarArchivo('public/subcategorias/',subcategoria.id+"."+ext,fi,function(e,d)
                   {
