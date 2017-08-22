@@ -203,7 +203,6 @@ function Usuario()
     */
     this.auth = function(request, callback)
     {
-      console.log(request.body);
       if (request.body.email)
       {
         if (request.body.contrasenia)

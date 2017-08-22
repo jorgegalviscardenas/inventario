@@ -17,6 +17,7 @@ var productosCtrl=require('./controllers/ControladorProductos.js');
 var proveedoresCtrl=require('./controllers/ControladorProveedores.js');
 var subcategoriasCtrl=require('./controllers/ControladorSubcategorias.js');
 var usuariosCtrl=require('./controllers/ControladorUsuarios.js');
+var promocionesCtrl=require('./controllers/ControladorPromociones.js');
 //definimos los middlewares
 var middlewareAuth = require('./middleware/MiddlewareAuth.js');
 //rutas
@@ -56,6 +57,11 @@ router.post('/usuarios',middlewareAuth.ensureAuthenticated,usuariosCtrl.agregarU
 router.get('/usuarios',middlewareAuth.ensureAuthenticated,usuariosCtrl.obtenerUsuarios);
 router.put('/usuarios/:id',middlewareAuth.ensureAuthenticated,usuariosCtrl.actualizarUsuario);
 router.delete('/usuarios/:id',middlewareAuth.ensureAuthenticated,usuariosCtrl.eliminarUsuario);
+//promociones
+router.post('/locales/:id/promociones',middlewareAuth.ensureAuthenticated,promocionesCtrl.agregarPromocion);
+router.get('/locales/:id/promociones',middlewareAuth.ensureAuthenticated,promocionesCtrl.obtenerPromociones);
+router.put('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.actualizarPromocion);
+router.delete('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.eliminarPromocion);
 
 //////////////////////-------CLIENTES----------///////////////////////////////////////
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
@@ -64,6 +70,7 @@ router.get('/cliente/categorias/:id/subcategorias',subcategoriasCtrl.obtenerSubc
 router.get('/cliente/subcategorias/:id/productos',productosCtrl.obtenerProductosDeSubcategoria);
 router.get('/cliente/subcategorias/:id',subcategoriasCtrl.obtenerSubcategoria);
 router.get('/cliente/categorias/:id',categoriasCtrl.obtenerCategoria);
+router.get('/cliente/empresas/:id/promociones',promocionesCtrl.obtenerPromocionesVigentesEmpresa);
 /////////////-----PRUEBAS-------//////////
 router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,response)
 {

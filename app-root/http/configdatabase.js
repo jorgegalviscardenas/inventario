@@ -180,6 +180,18 @@ var conexion = function()
   productoSchema.plugin(autoIncrement.plugin, {model: 'producto', field: 'id', startAt: 1});
   var modelProducto = connection.model('producto', productoSchema);
   ///////////////////////////////////////////////////////////////////////////
+  var promocionSchema=new Schema({
+    nombre:{type:String,default:''},
+    descripcion:{type:String,default:''},
+    ruta_imagen:{type:String,default:'promociones/imagenPorDefecto.png'},
+    fecha_finalizacion:{type:Date,default:new Date(Date.now)},
+    id_local:{type:Number,ref:'local'},
+    createdAt:{type:Date,default:new Date(Date.now())},
+    updatedAt:{type:Date,default:new Date(Date.now())}
+  });
+  promocionSchema.plugin(autoIncrement.plugin, {model: 'promocion', field: 'id', startAt: 1});
+  var modelPromocion = connection.model('promocion', promocionSchema);
+  ///////////////////////////////////////////////////////////////////////////
 
 
   /**
@@ -198,7 +210,8 @@ var conexion = function()
     Categoria: modelCategoria,
     Subcategoria:modelSubcategoria,
     Producto:modelProducto,
-    Empresa:modelEmpresa
+    Empresa:modelEmpresa,
+    Promocion:modelPromocion
     // agregar más modelos aquí en caso de haberlos
   };
 }
