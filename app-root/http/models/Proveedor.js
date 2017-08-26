@@ -1,5 +1,5 @@
 /**
-* Representa un proveedor
+* maneja operaciones referentes a los proveedores
 */
 function Proveedor()
 {

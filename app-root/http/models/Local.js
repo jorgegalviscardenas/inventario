@@ -1,5 +1,5 @@
 /**
-* Representa un local
+* Maneja operaciones referentes a un local
 */
 function Local()
 {

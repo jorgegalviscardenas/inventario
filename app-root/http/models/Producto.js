@@ -1,5 +1,5 @@
 /**
-* Representa un producto
+* Maneja operaciones referentes a los productos
 */
 function Producto()
 {
@@ -250,6 +250,36 @@ function Producto()
       this.obtenerProductosDeSubcategoria=function(idSubcategoria,callback)
       {
         db.Producto.find({id_subcategoria:idSubcategoria},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+        {
+          callback(error,data);
+        });
+      }
+      /**
+      * Obtiene el valor total de salida de los productos que estan asociados a los ids
+      * @param ids arreglo de ids de los productos
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerValorProductos=function(ids,callback)
+      {
+        db.Producto.aggregate([
+          { "$match": { id:{$in:[2,3,4,5]} }},
+          { "$group": {
+            "_id":null,
+            "totalValue": { "$sum": "$precio_salida" }
+          }}
+        ],
+        function(err, result) {
+          callback(err,result[0].totalValue);
+        });
+      }
+      /**
+      * Obtiene los productos asociados a los ids, pero solamente con el campo de precio de salida
+      * @param ids arreglo de ids de los productos
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerProductosSoloConPrecioSalida=function(ids,callback)
+      {
+        db.Producto.find({id:{$in:ids}},{precio_salida:1},{sort:{id:1}},function(error,data)
         {
           callback(error,data);
         });

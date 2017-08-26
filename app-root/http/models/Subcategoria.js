@@ -1,5 +1,5 @@
 /**
-* Representa una subcategoria
+* Maneja operaciones referentes a las subcategorias
 */
 function Subcategoria()
 {

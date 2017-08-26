@@ -1,5 +1,5 @@
 /**
-* Representa una categoria
+* Maneja operaciones referentes a un categoria
 */
 function Categoria()
 {

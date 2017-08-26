@@ -1,5 +1,5 @@
 /**
-* Representa una promoción
+* Maneja operaciones referentes a las promociones
 */
 function Promocion()
 {
@@ -19,7 +19,8 @@ function Promocion()
     }
     var createdAt=new Date(Date.now());
     var updatedAt=new Date(Date.now());
-    if(fields.nombre && id_local && fields.fecha_finalizacion)
+    if(fields.nombre && id_local && fields.fecha_finalizacion && fields.fecha_inicio
+       && fields.tipo && fields.id_recurso)
     {
       var newData={nombre:fields.nombre[0],id_local:id_local,descripcion:fields.descripcion[0],
         fecha_finalizacion:new Date(fields.fecha_finalizacion[0]),
@@ -103,6 +104,18 @@ function Promocion()
             if(fields.fecha_finalizacion)
             {
               data.fecha_finalizacion=new Date(fields.fecha_finalizacion[0]);
+            }
+            if(fields.fecha_inicio)
+            {
+              data.fecha_inicio=new Date(fields.fecha_inicio[0]);
+            }
+            if(fields.tipo)
+            {
+              data.tipo=fields.tipo;
+            }
+            if(fields.id_recurso)
+            {
+              data.id_recurso=fields.id_recurso[0];
             }
             var keys=Object.keys(files);
             var fils=new Array();
@@ -215,7 +228,8 @@ function Promocion()
           ids.push(locales[i].id);
         }
         var now=new Date(Date.now());
-        db.Promocion.find({id_local:{$in:ids},fecha_finalizacion:{$gt:now}},{__v:0,_id:0},{sort: {id: 1}},function(error,data)
+        db.Promocion.find({id_local:{$in:ids},fecha_finalizacion:{$gt:now},fecha_inicio:{$lt:now}},
+          {__v:0,_id:0},{sort: {id: 1}},function(error,data)
         {
           callback(error,data);
         });

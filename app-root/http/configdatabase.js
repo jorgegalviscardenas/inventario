@@ -184,7 +184,10 @@ var conexion = function()
     nombre:{type:String,default:''},
     descripcion:{type:String,default:''},
     ruta_imagen:{type:String,default:'promociones/imagenPorDefecto.png'},
+    fecha_inicio:{type:Date,default:new Date(Date.now())},
     fecha_finalizacion:{type:Date,default:new Date(Date.now)},
+    tipo:{type:Number,default:1},
+    id_recurso:{type:Number},
     id_local:{type:Number,ref:'local'},
     createdAt:{type:Date,default:new Date(Date.now())},
     updatedAt:{type:Date,default:new Date(Date.now())}
@@ -192,8 +195,53 @@ var conexion = function()
   promocionSchema.plugin(autoIncrement.plugin, {model: 'promocion', field: 'id', startAt: 1});
   var modelPromocion = connection.model('promocion', promocionSchema);
   ///////////////////////////////////////////////////////////////////////////
-
-
+  var mesaSchema=new Schema({
+    nombre:{type:String,default:''},
+    id_empresa:{type:Number,ref:'empresa'},
+    createdAt:{type:Date, default: new Date(Date.now())},
+    updatedAt:{type:Date,default:new Date(Date.now())}
+  });
+  mesaSchema.plugin(autoIncrement.plugin, {model: 'mesa', field: 'id', startAt: 1});
+  var modelMesa = connection.model('mesa', mesaSchema);
+  ////////////////////////////////////////////////////////////////////////////
+  var estadoEntregaSchema=new Schema({
+    nombre:{type:String,default:''},
+    createdAt:{type:Date,default:new Date(Date.now())},
+    updatedAt:{type:Date,default:new Date(Date.now())},
+  });
+  estadoEntregaSchema.plugin(autoIncrement.plugin, {model: 'estadoentrega', field: 'id', startAt: 1});
+  var modelEstadoEntrega=connection.model('estadoentrega', mesaSchema);
+  ///////////////////////////////////////////////////////////////////////////
+  var ordenSchema=new Schema({
+    telefono:{type:String,default:''},
+    mesa_id:{type:Number,ref:'mesa'},
+    pago:{type:Boolean,default:false},
+    estado_entrega:{type:Number,ref:'estadoentrega',default:1},
+    createdAt:{type:Date,default:new Date(Date.now())}
+  });
+  ordenSchema.plugin(autoIncrement.plugin, {model: 'orden', field: 'id', startAt: 1});
+  var modelOrden=connection.model('orden',ordenSchema);
+  //////////////////////////////////////////////////////////////////////////////
+  var subordenSchema=new Schema({
+    productos:{type:[{id:Number,cantidad:Number}],default:[]},
+    local_id:{type:Number,ref:'local'},
+    estado_entrega:{type:Number,ref:'estadoentrega',default:1},
+    valor:{type:Number,default:0.0},
+    orden_id:{type:Number,ref:'orden'},
+    createdAt:{type:Date,default:new Date(Date.now())}
+  });
+  subordenSchema.plugin(autoIncrement.plugin, {model: 'suborden', field: 'id', startAt: 1});
+  var modelSuborden=connection.model('suborden',subordenSchema);
+  /////////////////////////////////////////////////////////////////////////////
+  var comentarioSchema=new Schema({
+    orden_id:{type:Number,ref:'orden'},
+    comentario:{type:String,default:''},
+    calificacion:{type:Number,default:0},
+    createdAt:{type:Date,default:new Date(Date.now())}
+  });
+  comentarioSchema.plugin(autoIncrement.plugin, {model: 'comentario', field: 'id', startAt: 1});
+  var modelComentario=connection.model('comentario',comentarioSchema);
+  ////////////////////////////////////////////////////////////////////////////
   /**
   * Este objeto global, va servir para acceder a todos los modelos creados en
   * la base de datos
@@ -211,7 +259,12 @@ var conexion = function()
     Subcategoria:modelSubcategoria,
     Producto:modelProducto,
     Empresa:modelEmpresa,
-    Promocion:modelPromocion
+    Promocion:modelPromocion,
+    Mesa: modelMesa,
+    EstadoEntrega:modelEstadoEntrega,
+    Orden:modelOrden,
+    Suborden:modelSuborden,
+    Comentario:modelComentario
     // agregar más modelos aquí en caso de haberlos
   };
 }

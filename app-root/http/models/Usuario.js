@@ -1,5 +1,5 @@
 /**
-* Representa un usuario
+* Maneja operaciones referentes a un usuario
 */
 function Usuario()
 {

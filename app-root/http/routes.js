@@ -18,6 +18,7 @@ var proveedoresCtrl=require('./controllers/ControladorProveedores.js');
 var subcategoriasCtrl=require('./controllers/ControladorSubcategorias.js');
 var usuariosCtrl=require('./controllers/ControladorUsuarios.js');
 var promocionesCtrl=require('./controllers/ControladorPromociones.js');
+var mesasCtrl=require('./controllers/ControladorMesas.js');
 //definimos los middlewares
 var middlewareAuth = require('./middleware/MiddlewareAuth.js');
 //rutas
@@ -62,7 +63,13 @@ router.post('/locales/:id/promociones',middlewareAuth.ensureAuthenticated,promoc
 router.get('/locales/:id/promociones',middlewareAuth.ensureAuthenticated,promocionesCtrl.obtenerPromociones);
 router.put('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.actualizarPromocion);
 router.delete('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.eliminarPromocion);
-
+//mesas
+/**
+router.post('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.agregarMesa);
+router.get('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.obtenerMesas);
+router.put('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.actualizarMesa);
+router.delete('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.eliminarMesa);
+*/
 //////////////////////-------CLIENTES----------///////////////////////////////////////
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
 router.get('/cliente/locales/:id/categorias',categoriasCtrl.obtenerCategoriasDeLocal);
@@ -83,4 +90,5 @@ router.get('/restart',function(request,response)
   us.porDefecto();
   response.status(200).send({});
 });
+
 module.exports = router;

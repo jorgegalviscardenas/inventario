@@ -1,5 +1,5 @@
 /**
-* Representa un cliente
+* Maneja operaciones referentes a un cliente
 */
 function Cliente()
 {
