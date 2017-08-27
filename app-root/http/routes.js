@@ -64,12 +64,10 @@ router.get('/locales/:id/promociones',middlewareAuth.ensureAuthenticated,promoci
 router.put('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.actualizarPromocion);
 router.delete('/locales/:idLocal/promociones/:idPromocion',middlewareAuth.ensureAuthenticated,promocionesCtrl.eliminarPromocion);
 //mesas
-/**
 router.post('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.agregarMesa);
 router.get('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.obtenerMesas);
 router.put('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.actualizarMesa);
 router.delete('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.eliminarMesa);
-*/
 //////////////////////-------CLIENTES----------///////////////////////////////////////
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
 router.get('/cliente/locales/:id/categorias',categoriasCtrl.obtenerCategoriasDeLocal);

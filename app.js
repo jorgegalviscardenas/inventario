@@ -5,10 +5,14 @@ var config = require('./app-root/http/config/configToken.js');
 var cors = require('cors')
 var app = express();
 var crypto=require('crypto');
+
 //establecemos xcss-protection
 var helmet = require('helmet');
 app.use(helmet());
-app.use(cors())
+app.use(cors());
+var http = require('http').createServer(app);
+var socket= require('./app-root/http/socket.js');
+socket.socket(http);
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
