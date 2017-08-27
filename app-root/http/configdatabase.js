@@ -209,7 +209,7 @@ var conexion = function()
     createdAt:{type:Date,default:new Date(Date.now())},
     updatedAt:{type:Date,default:new Date(Date.now())},
   });
-  estadoEntregaSchema.plugin(autoIncrement.plugin, {model: 'estadoentrega', field: 'id', startAt: 1});
+  estadoEntregaSchema.plugin(autoIncrement.plugin, {model: 'estadoentrega', field: 'id', startAt: 10});
   var modelEstadoEntrega=connection.model('estadoentrega', mesaSchema);
   ///////////////////////////////////////////////////////////////////////////
   var ordenSchema=new Schema({
