@@ -284,6 +284,30 @@ function Producto()
           callback(error,data);
         });
       }
+      /**
+      * Obtiene el producto asociado al id
+      * @param id identificador del producto
+      * @param callback funbción para comunicar el resultado
+      */
+      this.obtenerProducto=function(id,callback)
+      {
+        db.Producto.findOne({id:id}.function(error,producto)
+        {
+          callback(error,producto);
+        });
+      }
+      /**
+      * Obtiene los productos asociados a los ids
+      * @param ids arreglo con los identificadores de los productos
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerProductosDesdeIds=function(ids,callback)
+      {
+        db.Producto.find({id:{$in:ids}},{__v:0,_id:0},{sort:{id:1}},function(error,productos)
+        {
+          callback(error,productos);
+        });
+      }
       return this;
     }
     module.exports=Producto;

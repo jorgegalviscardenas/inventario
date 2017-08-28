@@ -215,6 +215,18 @@ function Local()
         callback(error,data);
       });
     }
+    /**
+    * Obtiene el local asociado al id
+    * @param id identificador del local
+    * @param callback función para comunicar el resultado
+    */
+    this.obtenerLocal=function(id, callback)
+    {
+      db.Local.findOne({id:id}.function(error,local)
+      {
+        callback(error,local);
+      });
+    }
     return this;
   }
   module.exports=Local;

@@ -68,14 +68,26 @@ router.post('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.a
 router.get('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.obtenerMesas);
 router.put('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.actualizarMesa);
 router.delete('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.eliminarMesa);
+
 //////////////////////-------CLIENTES----------///////////////////////////////////////
+//obtener locales
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
+//obtener categorias de locales
 router.get('/cliente/locales/:id/categorias',categoriasCtrl.obtenerCategoriasDeLocal);
+//obtener subcategorias de categorias
 router.get('/cliente/categorias/:id/subcategorias',subcategoriasCtrl.obtenerSubcategoriasDeCategoria);
+//obtener productos de subcategorias
 router.get('/cliente/subcategorias/:id/productos',productosCtrl.obtenerProductosDeSubcategoria);
+//obtiene una subcategoria
 router.get('/cliente/subcategorias/:id',subcategoriasCtrl.obtenerSubcategoria);
+//obtiene una categoria
 router.get('/cliente/categorias/:id',categoriasCtrl.obtenerCategoria);
+//obtiene de una empresa todas las promociones
 router.get('/cliente/empresas/:id/promociones',promocionesCtrl.obtenerPromocionesVigentesEmpresa);
+//crea una nueva orden
+router.post('/ordenes',mesasCtrl.agregarMesa);
+//obtiene las ordenes asociadas a un numero de telefono
+router.get('/telefono/:numero/ordenes',mesasCtrl.obtenerMesas);
 /////////////-----PRUEBAS-------//////////
 router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,response)
 {

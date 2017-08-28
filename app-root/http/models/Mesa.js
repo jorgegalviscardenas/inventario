@@ -90,15 +90,15 @@ function Mesa()
           if(mesa)
           {
             db.Mesa.remove({id:idMesa,id_empresa:idEmpresa},function(error,dta)
-          {
-            if(!error)
             {
-              callback(error,200,mesa);
-            }
-            else {
-              callback(error,400,mesa);
-            }
-          });
+              if(!error)
+              {
+                callback(error,200,mesa);
+              }
+              else {
+                callback(error,400,mesa);
+              }
+            });
           }
           else{
             callback(new Error("Mesa no encontrada"),404,mesa);
@@ -107,6 +107,18 @@ function Mesa()
         else {
           callback(error,400,mesa);
         }
+      });
+    }
+    /**
+    * Obtiene la mesa asociada al id
+    * @param id identificador de la mesa
+    * @param callback función para comunicar el resultado
+    */
+    this.obtenerMesa=function(id,callback)
+    {
+      db.Mesa.findOne({id:id},function(error,mesa)
+      {
+        callback(error,mesa);
       });
     }
     return this;
