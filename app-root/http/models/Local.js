@@ -222,7 +222,7 @@ function Local()
     */
     this.obtenerLocal=function(id, callback)
     {
-      db.Local.findOne({id:id}.function(error,local)
+      db.Local.findOne({id:id},{__v:0,_id:0},null,function(error,local)
       {
         callback(error,local);
       });

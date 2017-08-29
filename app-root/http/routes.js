@@ -19,6 +19,7 @@ var subcategoriasCtrl=require('./controllers/ControladorSubcategorias.js');
 var usuariosCtrl=require('./controllers/ControladorUsuarios.js');
 var promocionesCtrl=require('./controllers/ControladorPromociones.js');
 var mesasCtrl=require('./controllers/ControladorMesas.js');
+var ordenesCtrl=require('./controllers/ControladorOrdenes.js');
 //definimos los middlewares
 var middlewareAuth = require('./middleware/MiddlewareAuth.js');
 //rutas
@@ -85,9 +86,9 @@ router.get('/cliente/categorias/:id',categoriasCtrl.obtenerCategoria);
 //obtiene de una empresa todas las promociones
 router.get('/cliente/empresas/:id/promociones',promocionesCtrl.obtenerPromocionesVigentesEmpresa);
 //crea una nueva orden
-router.post('/ordenes',mesasCtrl.agregarMesa);
+router.post('/cliente|/ordenes',ordenesCtrl.agregarOrden);
 //obtiene las ordenes asociadas a un numero de telefono
-router.get('/telefono/:numero/ordenes',mesasCtrl.obtenerMesas);
+router.get('/cliente/telefono/:numero/ordenes',ordenesCtrl.obtenerOrdenesDeTelefono);
 /////////////-----PRUEBAS-------//////////
 router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,response)
 {
@@ -100,5 +101,50 @@ router.get('/restart',function(request,response)
   us.porDefecto();
   response.status(200).send({});
 });
+router.get('/estadoEntrega',function(request,response)
+{
+  db.EstadoEntrega.remove(function(e,d)
+  {
+    var e1=new db.EstadoEntrega({nombre:"Pendiente por recibir",id:1});
+    e1.save(function(error,dt)
+    {
 
+    });
+    var e2=new db.EstadoEntrega({nombre:"Recibido",id:2});
+    e2.save(function(error,dt)
+    {
+
+    });
+    var e3=new db.EstadoEntrega({nombre:"Preparando",id:3});
+    e3.save(function(error,dt)
+    {
+
+    });
+    var e4=new db.EstadoEntrega({nombre:"Preparado",id:4});
+    e4.save(function(error,dt)
+    {
+
+    });
+    var e5=new db.EstadoEntrega({nombre:"Entregado",id:4});
+    e5.save(function(error,dt)
+    {
+
+    });
+    response.status(200).send({});
+  });
+});
+router.get('/resetmesas',function(request,response)
+{
+  db.Mesa.remove(function(e,d)
+  {
+    var mesa=new db.Mesa({nombre:"Mesa 1",id_empresa:1,
+    createdAt:new Date(Date.now()),
+    updatedAt:new Date(Date.now())});
+    mesa.save(function(err,dta)
+    {
+
+    });
+    response.status(200).send({});
+  });
+});
 module.exports = router;

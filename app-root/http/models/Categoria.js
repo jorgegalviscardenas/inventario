@@ -60,7 +60,7 @@ function Categoria()
     else {
       callback(new Error("Los campos de nombre y local son requeridos"),400,null);
     }
-  }
+  } 
   /**
   * Obtiene las categorias asociados al usuario
   * @param idUsuario identificador del usuario que solicita las categorias

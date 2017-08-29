@@ -13,14 +13,15 @@ function Mesa()
   {
     if(data.nombre)
     {
-      var mesa=new db.Mesa({nombre:data.nombre,id_empresa:idEmpresa,createdAt:new Date(Date.now),
+      var mesa=new db.Mesa({nombre:data.nombre,id_empresa:idEmpresa,
+        createdAt:new Date(Date.now()),
         updatedAt:new Date(Date.now())});
         mesa.save(function(error,dta1)
         {
           var dta=dta1.toObject();
           delete dta.__v;
           delete dta._id;
-          callback(error,dta1);
+          callback(error,dta);
         })
       }
       else {
@@ -116,7 +117,7 @@ function Mesa()
     */
     this.obtenerMesa=function(id,callback)
     {
-      db.Mesa.findOne({id:id},function(error,mesa)
+      db.Mesa.findOne({id:id},{__v:0,_id:0},null,function(error,mesa)
       {
         callback(error,mesa);
       });

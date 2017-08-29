@@ -32,7 +32,7 @@ exports.obtenerOrdenesDeTelefono=function(request,response)
       response.status(400).send({error:error.message});
     }
     else {
-      response.status(201).send(data);
+      response.status(200).send(data);
     }
   });
 }

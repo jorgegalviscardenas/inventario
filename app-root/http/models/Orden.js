@@ -28,6 +28,7 @@ function Orden()
               {
                 ids.push(data.ordenes[i].productos[j].id);
               }
+              let sbor=data.ordenes[i];
               producto.obtenerProductosSoloConPrecioSalida(ids,function(error,precios)
               {
                 var total=0;
@@ -35,11 +36,12 @@ function Orden()
                 {
                   total=total+precios[l].precio_salida;
                 }
-                var suborden=new db.Orden({productos:data.ordenes[i].productos,
-                  local_id:data.ordenes[i].local,estado_entrega:1,valor:total,
+                var suborden=new db.Suborden({productos:sbor.productos,
+                  local_id:sbor.local,estado_entrega:1,valor:total,
                   orden_id:dataOrden.id,createdAt:new Date(Date.now())});
                   suborden.save(function(error,dataSuborden)
                   {
+                    console.log(dataSuborden);
                     subordenes.push(dataSuborden);
                     cont=cont+1;
                     if(data.ordenes.length==cont)
@@ -79,8 +81,23 @@ function Orden()
           {
             if(ordenes.length>0)
             {
-              var subordenes=new Array();
-
+              var mesa=require('./Mesa.js')();
+              var local=require('./Local.js')();
+              var producto=require('./Producto.js')();
+              var ordenesArray=new Array();
+              var cont=0;
+              for(var i=0;i<ordenes.length;i++)
+              {
+                let ord=ordenes[i];
+                obtenerDetalleOrden(ord,mesa,local,producto,function(error,ordenFull){
+                  ordenesArray.push(ordenFull);
+                  cont=cont+1;
+                  if(cont==ordenes.length)
+                  {
+                    callback(error,ordenesArray);
+                  }
+                });
+              }
             }
             else {
               callback(error,ordenes);
@@ -99,7 +116,7 @@ function Orden()
       */
       this.obtenerEstadoEntrega=function(id,callback)
       {
-        db.EstadoEntrega.findOne({id:id},function(error,estadoEntrega)
+        db.EstadoEntrega.findOne({id:id},{__v:0,_id:0},null,function(error,estadoEntrega)
         {
           callback(error,estadoEntrega);
         });
@@ -127,7 +144,7 @@ function Orden()
                 for(var i=0;i<subordenes.length;i++)
                 {
                   let suborden=subordenes[i];
-                  this.obtenerDetalleSuborden(suborden,local,producto,function(error,sbor)
+                  obtenerDetalleSuborden(suborden,local,producto,function(error,sbor)
                   {
                     cont=cont+1;
                     subordenesArray.push(sbor);
@@ -188,12 +205,14 @@ function Orden()
                       }
                       var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                         valor:suborden.valor,orden_id:suborden.orden_id,
-                        createdAt:orden.createdAt,productos:productosFull};
+                        createdAt:suborden.createdAt,productos:productosFull};
+                        callback(error,fullData);
                       }
                       else {
                         var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                           valor:suborden.valor,orden_id:suborden.orden_id,
                           createdAt:orden.createdAt,productos:[]};
+                          callback(error,fullData);
                         }
                       });
                     }
@@ -201,10 +220,11 @@ function Orden()
                       var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                         valor:suborden.valor,orden_id:suborden.orden_id,
                         createdAt:orden.createdAt,productos:[]};
+                        callback(error,fullData);
                       }
-                    }
+                    });
                   });
-                });
+                }
+                return this;
               }
-              return this;
-            }
+              module.exports=Orden;

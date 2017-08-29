@@ -64,7 +64,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  tipoUsuarioSchema.plugin(autoIncrement.plugin, {model: 'tipo_usuario', field: 'id', startAt: 3});
+  tipoUsuarioSchema.plugin(autoIncrement.plugin, {model: 'tipo_usuario', field: 'id', startAt: 10});
   var modelTipoUsuario = connection.model('tipo_usuario', tipoUsuarioSchema);
   /////////////////////////////////////////////////////////////////////////////////
   var permisoSchema=new Schema({
@@ -72,7 +72,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  permisoSchema.plugin(autoIncrement.plugin, {model: 'permiso', field: 'id', startAt: 1});
+  permisoSchema.plugin(autoIncrement.plugin, {model: 'permiso', field: 'id', startAt: 20});
   var modelPermiso=connection.model('permiso', permisoSchema);
   /////////////////////////////////////////////////////////////////////////////////
   var empresaSchema=new Schema({
@@ -125,7 +125,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  clienteSchema.plugin(autoIncrement.plugin, {model: 'cliente', field: 'id', startAt: 1});
+  clienteSchema.plugin(autoIncrement.plugin, {model: 'cliente', field: 'id', startAt: 5});
   var modelCliente = connection.model('cliente', clienteSchema);
   ////////////////////////////////////////////////////////////////////////////
   var proveedorSchema = new Schema({
@@ -138,7 +138,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  proveedorSchema.plugin(autoIncrement.plugin, {model: 'proveedor', field: 'id', startAt: 1});
+  proveedorSchema.plugin(autoIncrement.plugin, {model: 'proveedor', field: 'id', startAt: 5});
   var modelProveedor = connection.model('proveedor', proveedorSchema);
   ////////////////////////////////////////////////////////////////////////////
   var categoriaSchema = new Schema({
@@ -148,7 +148,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  categoriaSchema.plugin(autoIncrement.plugin, {model: 'categoria', field: 'id', startAt: 4});
+  categoriaSchema.plugin(autoIncrement.plugin, {model: 'categoria', field: 'id', startAt: 5});
   var modelCategoria = connection.model('categoria', categoriaSchema);
   ////////////////////////////////////////////////////////////////////////////
   var subcategoriaSchema = new Schema({
@@ -159,7 +159,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  subcategoriaSchema.plugin(autoIncrement.plugin, {model: 'subcategoria', field: 'id', startAt: 1});
+  subcategoriaSchema.plugin(autoIncrement.plugin, {model: 'subcategoria', field: 'id', startAt: 5});
   var modelSubcategoria= connection.model('subcategoria', subcategoriaSchema);
   ////////////////////////////////////////////////////////////////////////////
   var productoSchema = new Schema({
@@ -177,7 +177,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  productoSchema.plugin(autoIncrement.plugin, {model: 'producto', field: 'id', startAt: 1});
+  productoSchema.plugin(autoIncrement.plugin, {model: 'producto', field: 'id', startAt: 10});
   var modelProducto = connection.model('producto', productoSchema);
   ///////////////////////////////////////////////////////////////////////////
   var promocionSchema=new Schema({
@@ -192,16 +192,17 @@ var conexion = function()
     createdAt:{type:Date,default:new Date(Date.now())},
     updatedAt:{type:Date,default:new Date(Date.now())}
   });
-  promocionSchema.plugin(autoIncrement.plugin, {model: 'promocion', field: 'id', startAt: 1});
+  promocionSchema.plugin(autoIncrement.plugin, {model: 'promocion', field: 'id', startAt: 5});
   var modelPromocion = connection.model('promocion', promocionSchema);
   ///////////////////////////////////////////////////////////////////////////
   var mesaSchema=new Schema({
     nombre:{type:String,default:''},
     id_empresa:{type:Number,ref:'empresa'},
     createdAt:{type:Date, default: new Date(Date.now())},
+    ruta_qr:{type:String,default:'mesas/default.png'},
     updatedAt:{type:Date,default:new Date(Date.now())}
   });
-  mesaSchema.plugin(autoIncrement.plugin, {model: 'mesa', field: 'id', startAt: 1});
+  mesaSchema.plugin(autoIncrement.plugin, {model: 'mesa', field: 'id', startAt: 5});
   var modelMesa = connection.model('mesa', mesaSchema);
   ////////////////////////////////////////////////////////////////////////////
   var estadoEntregaSchema=new Schema({
@@ -210,7 +211,7 @@ var conexion = function()
     updatedAt:{type:Date,default:new Date(Date.now())},
   });
   estadoEntregaSchema.plugin(autoIncrement.plugin, {model: 'estadoentrega', field: 'id', startAt: 10});
-  var modelEstadoEntrega=connection.model('estadoentrega', mesaSchema);
+  var modelEstadoEntrega=connection.model('estadoentrega', estadoEntregaSchema);
   ///////////////////////////////////////////////////////////////////////////
   var ordenSchema=new Schema({
     telefono:{type:String,default:''},
@@ -219,7 +220,7 @@ var conexion = function()
     estado_entrega:{type:Number,ref:'estadoentrega',default:1},
     createdAt:{type:Date,default:new Date(Date.now())}
   });
-  ordenSchema.plugin(autoIncrement.plugin, {model: 'orden', field: 'id', startAt: 1});
+  ordenSchema.plugin(autoIncrement.plugin, {model: 'orden', field: 'id', startAt: 5});
   var modelOrden=connection.model('orden',ordenSchema);
   //////////////////////////////////////////////////////////////////////////////
   var subordenSchema=new Schema({
@@ -230,7 +231,7 @@ var conexion = function()
     orden_id:{type:Number,ref:'orden'},
     createdAt:{type:Date,default:new Date(Date.now())}
   });
-  subordenSchema.plugin(autoIncrement.plugin, {model: 'suborden', field: 'id', startAt: 1});
+  subordenSchema.plugin(autoIncrement.plugin, {model: 'suborden', field: 'id', startAt: 5});
   var modelSuborden=connection.model('suborden',subordenSchema);
   /////////////////////////////////////////////////////////////////////////////
   var comentarioSchema=new Schema({

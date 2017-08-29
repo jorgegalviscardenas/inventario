@@ -291,7 +291,7 @@ function Producto()
       */
       this.obtenerProducto=function(id,callback)
       {
-        db.Producto.findOne({id:id}.function(error,producto)
+        db.Producto.findOne({id:id},function(error,producto)
         {
           callback(error,producto);
         });
