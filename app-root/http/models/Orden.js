@@ -44,7 +44,13 @@ function Orden()
                     cont=cont+1;
                     if(data.ordenes.length==cont)
                     {
-                      callback(null,Object.assign(dataOrden.toObject(),{ordenes:subordenes}));
+                      var mesa=require('./Mesa.js')();
+                      var local=require('./Local.js')();
+                      var producto=require('./Producto.js')();
+                      this.obtenerDetalleOrden(dataOrden,mesa,local,producto,function(error,ordenFull)
+                      {
+                        callback(error,ordenFull);
+                      });
                     }
                   });
                 });
@@ -121,76 +127,84 @@ function Orden()
                 for(var i=0;i<subordenes.length;i++)
                 {
                   let suborden=subordenes[i];
-                  this.obtenerDetalleSuborden(suborden,function(error,sbor)
+                  this.obtenerDetalleSuborden(suborden,local,producto,function(error,sbor)
                   {
-
-                  });
+                    cont=cont+1;
+                    subordenesArray.push(sbor);
+                    if(cont==subordenes.length)
+                    {
+                      var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
+                        mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:subordenesArray};
+                        callback(error,fullData);
+                      }
+                    });
+                  }
                 }
-              }
-              else {
-                var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
-                  mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt};
-                }
+                else {
+                  var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
+                    mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:[]};
+                    callback(error,fullData);
+                  }
+                });
               });
             });
-          });
 
-        }
-        /**
-        * Obtiene el detalle de la suborden
-        * @param suborden suborden con los campos simples
-        * @param local modelo para hacer consultas referentes a los locales
-        * @param producto modelo para hacer consultas referentes a los productos
-        * @param callback función para comunicar el resultado
-        */
-        this.obtenerDetalleSuborden=function(suborden,local,producto,callback)
-        {
-          local.obtenerLocal(suborden.local_id,function(error,lc)
+          }
+          /**
+          * Obtiene el detalle de la suborden
+          * @param suborden suborden con los campos simples
+          * @param local modelo para hacer consultas referentes a los locales
+          * @param producto modelo para hacer consultas referentes a los productos
+          * @param callback función para comunicar el resultado
+          */
+          this.obtenerDetalleSuborden=function(suborden,local,producto,callback)
           {
-            this.obtenerEstadoEntrega(suborden.estado_entrega,function(error,estadoEntrega)
+            local.obtenerLocal(suborden.local_id,function(error,lc)
             {
-              var proIds=new Array();
-              for(var i=0;i<suborden.productos.length;i++)
+              this.obtenerEstadoEntrega(suborden.estado_entrega,function(error,estadoEntrega)
               {
-                proIds.push(suborden.productos[i].id);
-              }
-              if(proIds.length>0)
-              {
-
-                producto.obtenerProductosDesdeIds(proIds,function(error,productos)
+                var proIds=new Array();
+                for(var i=0;i<suborden.productos.length;i++)
                 {
-                  var productosFull=new Array();
-                  if(productos.length>0)
+                  proIds.push(suborden.productos[i].id);
+                }
+                if(proIds.length>0)
+                {
+
+                  producto.obtenerProductosDesdeIds(proIds,function(error,productos)
                   {
-                    for(var i=0;i<suborden.productos.length;i++)
+                    var productosFull=new Array();
+                    if(productos.length>0)
                     {
-                      for(var j=0;j<productos.length;j++)
+                      for(var i=0;i<suborden.productos.length;i++)
                       {
-                        if(productos[j].id==suborden.productos[i].id)
+                        for(var j=0;j<productos.length;j++)
                         {
-                          productosFull.push({producto:productos[j],cantidad:suborden.productos[i].cantidad});
+                          if(productos[j].id==suborden.productos[i].id)
+                          {
+                            productosFull.push({producto:productos[j],cantidad:suborden.productos[i].cantidad});
+                          }
                         }
                       }
-                    }
-                    var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
-                      valor:suborden.valor,orden_id:suborden.orden_id,
-                      createdAt:orden.createdAt,productos:productosFull};
+                      var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
+                        valor:suborden.valor,orden_id:suborden.orden_id,
+                        createdAt:orden.createdAt,productos:productosFull};
+                      }
+                      else {
+                        var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
+                          valor:suborden.valor,orden_id:suborden.orden_id,
+                          createdAt:orden.createdAt,productos:[]};
+                        }
+                      });
                     }
                     else {
                       var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                         valor:suborden.valor,orden_id:suborden.orden_id,
                         createdAt:orden.createdAt,productos:[]};
                       }
-                    });
-                  }
-                  else {
-                    var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
-                      valor:suborden.valor,orden_id:suborden.orden_id,
-                      createdAt:orden.createdAt,productos:[]};
                     }
-                  }
+                  });
                 });
-              });
+              }
+              return this;
             }
-            return this;
-          }
