@@ -229,7 +229,7 @@ function Promocion()
         }
         var now=new Date(Date.now());
         db.Promocion.find({id_local:{$in:ids},fecha_finalizacion:{$gt:now},fecha_inicio:{$lt:now}},
-          {__v:0,_id:0},{sort: {id: 1}},function(error,data)
+          {__v:0,_id:0},{sort: {id: -1}},function(error,data)
         {
           callback(error,data);
         });

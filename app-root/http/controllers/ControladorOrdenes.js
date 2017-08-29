@@ -36,3 +36,41 @@ exports.obtenerOrdenesDeTelefono=function(request,response)
     }
   });
 }
+/**
+* Controla la actualización del estado de una orden
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.actualizarEstadoOrden=function(request,response)
+{
+  var orden= require('../models/Orden.js')();
+  orden.actualizarEstadoOrden(request.params.id,request.body.estado_entrega,function(error,code,data)
+  {
+    if(error)
+    {
+      response.status(code).send({error:error.message});
+    }
+    else {
+      response.status(code).send(data);
+    }
+  });
+}
+/**
+* Controla la actualiazción del estado de una suborden
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.actualizarEstadoSuborden=function(request,response)
+{
+  var orden= require('../models/Orden.js')();
+  orden.actualizarEstadoSuborden(request.params.id,request.body.estado_entrega,function(error,code,data)
+  {
+    if(error)
+    {
+      response.status(code).send({error:error.message});
+    }
+    else {
+      response.status(code).send(data);
+    }
+  });
+}

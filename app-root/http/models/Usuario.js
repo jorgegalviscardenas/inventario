@@ -173,7 +173,7 @@ function Usuario()
           });
           db.Local.remove({},function(error,dta)
           {
-            var loc=new db.Local({nombre:"Local ejemplo",departamento:"Caldas",ciudad:"Manizales",
+            var loc=new db.Local({id:1,nombre:"Local ejemplo",departamento:"Caldas",ciudad:"Manizales",
             telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
             loc.save(function(error,dta)
             {

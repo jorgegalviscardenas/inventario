@@ -41,7 +41,6 @@ function Orden()
                   orden_id:dataOrden.id,createdAt:new Date(Date.now())});
                   suborden.save(function(error,dataSuborden)
                   {
-                    console.log(dataSuborden);
                     subordenes.push(dataSuborden);
                     cont=cont+1;
                     if(data.ordenes.length==cont)
@@ -56,7 +55,6 @@ function Orden()
                     }
                   });
                 });
-
               }
             });
           }
@@ -94,6 +92,9 @@ function Orden()
                   cont=cont+1;
                   if(cont==ordenes.length)
                   {
+                    ordenesArray.sort(function(a, b) {
+                      return b.id - a.id;
+                    });
                     callback(error,ordenesArray);
                   }
                 });
@@ -223,6 +224,71 @@ function Orden()
                         callback(error,fullData);
                       }
                     });
+                  });
+                }
+                /**
+                * Actualiza el estado de la orden
+                * @param idOrden identificador de la orden
+                * @param idEstado identificador del estado al que se va a modificar
+                * @param callback función para comunicar el resultado
+                */
+                this.actualizarEstadoOrden=function(idOrden,idEstado,callback)
+                {
+                  db.Orden.findOne({id:idOrden},function(error,orden)
+                  {
+                    if(!error)
+                    {
+                      if(orden)
+                      {
+                        db.Orden.update({id:idOrden},{$set:{estado_entrega:idEstado}},function(error,data)
+                        {
+                          callback(error,200,data);
+                          db.Suborden.update({orden_id:idOrden},{$set:{estado_entrega:idEstado}},function(err,dat)
+                          {
+                          });
+                        });
+                      }
+                      else {
+                        callback(new Error("Orden no encontrada"),404,null);
+                      }
+                    }
+                    else{
+                      callback(error,400,null);
+                    }
+                  });
+                }
+                /**
+                * Actualiza el estado de la suborden
+                * @param idSuborden identificador de la suborden
+                * @param idEstado identificador del estado al que se va a modificar
+                * @param callback función para comunicar el resultado
+                */
+                this.actualizarEstadoSuborden=function(idSuborden,idEstado,callback)
+                {
+                  db.Suborden.findOne({id:idSuborden},function(error,suborden)
+                  {
+                    if(!error)
+                    {
+                      if(suborden)
+                      {
+                        db.Suborden.update({id:idSuborden},{$set:{estado_entrega:idEstado}},function(error,data)
+                        {
+                          callback(error,200,data);
+                          db.Suborden.findOne({orden_id:suborden.orden_id},{estado_entrega:1},{sort:{estado_entrega:1}},function(error,dta)
+                          {
+                            db.Orden.update({id:suborden.orden_id},{$set:{estado_entrega:dta.estado_entrega}},function(error,data)
+                            {
+                            });
+                          });
+                        });
+                      }
+                      else {
+                        callback(new Error("Suborden no encontrada"),404,null);
+                      }
+                    }
+                    else {
+                      callback(error,400,null);
+                    }
                   });
                 }
                 return this;

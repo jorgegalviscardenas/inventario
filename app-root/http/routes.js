@@ -69,7 +69,9 @@ router.post('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.a
 router.get('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.obtenerMesas);
 router.put('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.actualizarMesa);
 router.delete('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.eliminarMesa);
-
+//ordenes
+router.put('/ordenes/:id/estado',middlewareAuth.ensureAuthenticated,ordenesCtrl.actualizarEstadoOrden);
+router.put('/subordenes/:id/estado',middlewareAuth.ensureAuthenticated,ordenesCtrl.actualizarEstadoSuborden);
 //////////////////////-------CLIENTES----------///////////////////////////////////////
 //obtener locales
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
@@ -137,7 +139,14 @@ router.get('/resetmesas',function(request,response)
 {
   db.Mesa.remove(function(e,d)
   {
-    var mesa=new db.Mesa({nombre:"Mesa 1",id_empresa:1,
+    var mesa=new db.Mesa({id:1,nombre:"Mesa 1",id_empresa:1,
+    createdAt:new Date(Date.now()),
+    updatedAt:new Date(Date.now())});
+    mesa.save(function(err,dta)
+    {
+
+    });
+    var mesa=new db.Mesa({id:3,nombre:"Mesa 3",id_empresa:1,
     createdAt:new Date(Date.now()),
     updatedAt:new Date(Date.now())});
     mesa.save(function(err,dta)
