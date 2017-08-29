@@ -86,7 +86,7 @@ router.get('/cliente/categorias/:id',categoriasCtrl.obtenerCategoria);
 //obtiene de una empresa todas las promociones
 router.get('/cliente/empresas/:id/promociones',promocionesCtrl.obtenerPromocionesVigentesEmpresa);
 //crea una nueva orden
-router.post('/cliente|/ordenes',ordenesCtrl.agregarOrden);
+router.post('/cliente/ordenes',ordenesCtrl.agregarOrden);
 //obtiene las ordenes asociadas a un numero de telefono
 router.get('/cliente/telefono/:numero/ordenes',ordenesCtrl.obtenerOrdenesDeTelefono);
 /////////////-----PRUEBAS-------//////////
