@@ -13,7 +13,7 @@ exports.autenticar = function(request, response)
       response.status(401).send({error: error.message});
     }
     else {
-      response.status(200).send(data.token);
+      response.status(200).send(data);
     }
   });
 }

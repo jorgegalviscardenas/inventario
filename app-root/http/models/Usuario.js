@@ -169,7 +169,7 @@ function Usuario()
             var us=new db.Usuario({id:1,email:em,contrasenia:con,
             permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});
             us.save(function(error,dta){
-              
+
             });
             em='a';
             pa='123'
@@ -223,7 +223,7 @@ function Usuario()
       {
         if (request.body.contrasenia)
         {
-          db.Usuario.findOne({email:request.body.email}, function(error, user)
+          db.Usuario.findOne({email:request.body.email},{__v:0,_id:0,contrasenia:0}, function(error, user)
           {
             if (!error)
             {
