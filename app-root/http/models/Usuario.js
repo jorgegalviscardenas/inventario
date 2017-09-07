@@ -235,7 +235,7 @@ function Usuario()
                 {
                   var us=user.toObject();
                   delete us.contrasenia;
-                  callback(null, {token: service.createToken(user), user: user});
+                  callback(null, {token: service.createToken(user), user: us});
                 }
                 else {
                   callback({message:'Contraseña incorrecta',code:1}, null)
