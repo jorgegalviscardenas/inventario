@@ -171,20 +171,20 @@ function Usuario()
             us.save(function(error,dta){
 
             });
-            em='a';
-            pa='123'
-            con=cifrarContrasenia(em,pa);
-            us=new db.Usuario({id:2,email:em,contrasenia:con,
+            var em2='a';
+            var pa2='123'
+            var con2=cifrarContrasenia(em2,pa2);
+            var us2=new db.Usuario({id:2,email:em2,contrasenia:con2,
             permisos:[17],locales:[1]});
-            us.save(function(error,dta){
+            us2.save(function(error,dta){
 
             });
-            em='g';
-            pa='123'
-            con=cifrarContrasenia(em,pa);
-            us=new db.Usuario({id:3,email:em,contrasenia:con,
+            var em3='g';
+            var pa3='123'
+            var con3=cifrarContrasenia(em3,pa3);
+            var us3=new db.Usuario({id:3,email:em3,contrasenia:con3,
             permisos:[18],locales:[1]});
-            us.save(function(error,dta){
+            us3.save(function(error,dta){
             });
           });
           db.Local.remove({},function(error,dta)
