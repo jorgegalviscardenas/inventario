@@ -72,7 +72,7 @@ var conexion = function()
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
-  permisoSchema.plugin(autoIncrement.plugin, {model: 'permiso', field: 'id', startAt: 20});
+  permisoSchema.plugin(autoIncrement.plugin, {model: 'permiso', field: 'id', startAt: 50});
   var modelPermiso=connection.model('permiso', permisoSchema);
   /////////////////////////////////////////////////////////////////////////////////
   var empresaSchema=new Schema({
@@ -109,6 +109,7 @@ var conexion = function()
     permisos:{type:[Number],default:[]},
     es_administrador:{type:Boolean,default:false},
     usuario_de:{type:Number, default:-1},
+    locales:{type:[Number],ref:'local',default:[]},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });

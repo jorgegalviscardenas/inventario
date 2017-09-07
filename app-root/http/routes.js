@@ -96,7 +96,7 @@ router.get('/prueba',middlewareAuth.ensureAuthenticated,function(request,respons
 {
   response.status(200).send({respuesta:"Holaa"});
 });
-
+//------------------RESETSSSSS------------------------//
 router.get('/restart',function(request,response)
 {
   var us = require('./models/Usuario.js')();
@@ -155,5 +155,65 @@ router.get('/resetmesas',function(request,response)
     });
     response.status(200).send({});
   });
+});
+router.get('/resetpermisos',function(request,response)
+{
+  var createdAt=new Date(Date.now());
+  var updatedAt=new Date(Date.now());
+  var permiso=new db.Permiso({nombre:"Agregar local",id:1,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Ver locales asociados",id:2,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Editar locales asociados",id:3,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Eliminar local",id:4,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Crear Categoria",id:5,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Ver categorias",id:6,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Editar categorias",id:7,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Eliminar categoria",id:8,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Crear subcategoria",id:9,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Ver subcategorias",id:10,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Editar subcategoria",id:11,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Eliminar subcategoria",id:12,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Crear producto",id:13,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Ver productos",id:14,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Editar producto",id:15,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Eliminar producto",id:16,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Manejar orden (visualizar orden)",id:17,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  var permiso=new db.Permiso({nombre:"Entregar orden (cambiar estado de orden a entregado)",id:18,createdAt:createdAt,
+  updatedAt:updatedAt});
+  permiso.save(function(e,d){});
+  response.status(200).send({});
 });
 module.exports = router;

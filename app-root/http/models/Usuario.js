@@ -166,14 +166,30 @@ function Usuario()
             var em='j';
             var pa='123'
             var con=cifrarContrasenia(em,pa);
-            var us=new db.Usuario({id:1,email:em,contrasenia:con});
+            var us=new db.Usuario({id:1,email:em,contrasenia:con,
+            permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});
+            us.save(function(error,dta){
+              
+            });
+            em='a';
+            pa='123'
+            con=cifrarContrasenia(em,pa);
+            us=new db.Usuario({id:2,email:em,contrasenia:con,
+            permisos:[17],locales:[1]});
             us.save(function(error,dta){
 
+            });
+            em='g';
+            pa='123'
+            con=cifrarContrasenia(em,pa);
+            us=new db.Usuario({id:3,email:em,contrasenia:con,
+            permisos:[18],locales:[1]});
+            us.save(function(error,dta){
             });
           });
           db.Local.remove({},function(error,dta)
           {
-            var loc=new db.Local({id:1,nombre:"Local ejemplo",departamento:"Caldas",ciudad:"Manizales",
+            var loc=new db.Local({id:1,nombre:"Carmentea",departamento:"Caldas",ciudad:"Manizales",
             telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
             loc.save(function(error,dta)
             {
