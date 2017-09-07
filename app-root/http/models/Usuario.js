@@ -166,6 +166,7 @@ function Usuario()
             var em='j';
             var pa='123'
             var con=cifrarContrasenia(em,pa);
+            console.log(con);
             var us=new db.Usuario({id:1,email:em,contrasenia:con,
             permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});
             us.save(function(error,dta){
@@ -184,6 +185,7 @@ function Usuario()
             var con3=cifrarContrasenia(em3,pa3);
             var us3=new db.Usuario({id:3,email:em3,contrasenia:con3,
             permisos:[18],locales:[1]});
+
             us3.save(function(error,dta){
             });
           });
@@ -219,6 +221,7 @@ function Usuario()
     */
     this.auth = function(request, callback)
     {
+      console.log(request.body);
       if (request.body.email)
       {
         if (request.body.contrasenia)
@@ -230,6 +233,7 @@ function Usuario()
               if (user)
               {
                 var passwordCode = cifrarContrasenia(request.body.email, request.body.contrasenia);
+                console.log(passwordCode);
                 if (passwordCode == user.contrasenia)
                 {
                   callback(null, {token: service.createToken(user), user: user});
