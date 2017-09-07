@@ -105,9 +105,11 @@ var conexion = function()
     email:{type:String,default:''},
     contrasenia:{type:String},
     activo:{type:Boolean, default:true},
+    id_tipo_usuario:{type: Number, ref: 'tipo_usuario',default:1},
     permisos:{type:[Number],default:[]},
-    locales:{type:[Number],default:[]},
     es_administrador:{type:Boolean,default:false},
+    usuario_de:{type:Number, default:-1},
+    locales:{type:[Number],ref:'local',default:[]},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
