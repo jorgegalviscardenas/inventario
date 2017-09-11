@@ -35,6 +35,6 @@ app.use(routes);
    console.log(metadata);
  });
 */
-http.listen(env.NODE_PORT || 3000, env.NODE_IP || 'localhost', function() {
+http.listen(env.NODE_PORT || 3000, env.NODE_IP || '127.0.0.1', function() {
     console.log('Application worker started...');
 });

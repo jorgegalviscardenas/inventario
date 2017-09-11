@@ -308,6 +308,18 @@ function Producto()
           callback(error,productos);
         });
       }
+      /**
+      * Obtiene todos los productos asociados a un local
+      * @param idLocal  identificador del local
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerProductosDeLocal=function(idLocal,callback)
+      {
+        db.Producto.find({id_local:idLocal},{__v:0,_id:0},{sort:{id:1}},function(error,productos)
+        {
+          callback(error,productos);
+        });
+      }
       return this;
     }
     module.exports=Producto;

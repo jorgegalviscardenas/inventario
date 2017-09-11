@@ -263,6 +263,18 @@ function Subcategoria()
           }
         });
       }
+      /**
+      * Obtiene las subcategorias de un local
+      * @param idLocal identificador del local
+      * @param callback función para comunicar el resultado
+      */
+      this.obtenerSubcategoriasDeLocal=function(idLocal,callback)
+      {
+        db.Subcategoria.find({id_local:idLocal},{__v:0,_id:0},function(error,subcategorias)
+        {
+          callback(error,subcategorias);
+        });
+      }
       return this;
     }
     module.exports=Subcategoria;

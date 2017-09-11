@@ -145,3 +145,23 @@ exports.obtenerSubcategoria=function(request,response)
     }
   });
 }
+/**
+* Controla la obteneción de las subcategorias de un local
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerSubcategoriasDeLocal=function(request,response)
+{
+  var subcategoria= require('../models/Subcategoria.js')();
+  subcategoria.obtenerSubcategoriasDeLocal(request.params.id,function(error,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
+    }
+  });
+}

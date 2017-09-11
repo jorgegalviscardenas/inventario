@@ -123,3 +123,23 @@ exports.obtenerProductosDeSubcategoria=function(request,response)
     }
   });
 }
+/**
+* Controla la obteneción de los productos de un local
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerProductosDeLocal=function(request,response)
+{
+  var producto= require('../models/Producto.js')();
+  producto.obtenerProductosDeLocal(request.params.id,function(error,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
+    }
+  });
+}

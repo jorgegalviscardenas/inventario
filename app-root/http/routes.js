@@ -26,7 +26,7 @@ var middlewareAuth = require('./middleware/MiddlewareAuth.js');
 router.post('/login',authCtrl.autenticar);
 //CATEGORIAS
 router.post('/categorias',middlewareAuth.ensureAuthenticated,categoriasCtrl.agregarCategoria);
-router.get('/categorias',middlewareAuth.ensureAuthenticated,categoriasCtrl.obtenerCategorias);
+//router.get('/categorias',middlewareAuth.ensureAuthenticated,categoriasCtrl.obtenerCategorias);
 router.put('/categorias/:id',middlewareAuth.ensureAuthenticated,categoriasCtrl.actualizarCategoria);
 router.delete('/categorias/:id',middlewareAuth.ensureAuthenticated,categoriasCtrl.eliminarCategoria);
 //CLIENTES
@@ -75,8 +75,12 @@ router.put('/subordenes/:id/estado',middlewareAuth.ensureAuthenticated,ordenesCt
 //////////////////////-------CLIENTES----------///////////////////////////////////////
 //obtener locales
 router.get('/cliente/empresas/:id/locales',localesCtrl.obtenerLocalesDeEmpresa);
-//obtener categorias de locales
+//obtener categorias de local
 router.get('/cliente/locales/:id/categorias',categoriasCtrl.obtenerCategoriasDeLocal);
+//obtener subcategorias de local
+router.get('/cliente/locales/:id/subcategorias',subcategoriasCtrl.obtenerSubcategoriasDeLocal);
+//obtener productos de local
+router.get('/cliente/locales/:id/productos',productosCtrl.obtenerProductosDeLocal);
 //obtener subcategorias de categorias
 router.get('/cliente/categorias/:id/subcategorias',subcategoriasCtrl.obtenerSubcategoriasDeCategoria);
 //obtener productos de subcategorias
