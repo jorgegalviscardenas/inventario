@@ -67,7 +67,7 @@ exports.actualizarSubcategoria=function(request,response)
   form.parse(request, function(err, fields, files) {
     if(!err)
     {
-      subcategoria.actualizarCliente(request.params.id,files,fields,function(error,code,data)
+      subcategoria.actualizarSubcategoria(request.params.id,files,fields,function(error,code,data)
       {
         if(error)
         {
