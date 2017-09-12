@@ -93,7 +93,7 @@ function Subcategoria()
     */
     this.actualizarSubcategoria=function(idSubcategoria,files,fields,callback)
     {
-      db.Subategoria.findOne({id:idSubcategoria},{__v:0,_id:0},function(error, subcategoria)
+      db.Subcategoria.findOne({id:idSubcategoria},{__v:0,_id:0},function(error, subcategoria)
       {
         if(!error)
         {
