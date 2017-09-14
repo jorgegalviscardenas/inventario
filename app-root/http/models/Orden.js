@@ -37,7 +37,7 @@ function Orden()
                   total=total+precios[l].precio_salida;
                 }
                 var suborden=new db.Suborden({productos:sbor.productos,
-                  local_id:sbor.local,estado_entrega:1,valor:total,
+                  local_id:sbor.local,estado_entrega:1,valor:total,mesa_id:data.mesa,
                   orden_id:dataOrden.id,createdAt:new Date(Date.now())});
                   suborden.save(function(error,dataSuborden)
                   {
@@ -48,7 +48,7 @@ function Orden()
                       var mesa=require('./Mesa.js')();
                       var local=require('./Local.js')();
                       var producto=require('./Producto.js')();
-                      this.obtenerDetalleOrden(dataOrden,mesa,local,producto,function(error,ordenFull)
+                      this.obtenerDetalleOrdenFull(dataOrden,mesa,local,producto,function(error,ordenFull)
                       {
                         callback(error,ordenFull);
                       });
@@ -87,7 +87,7 @@ function Orden()
               for(var i=0;i<ordenes.length;i++)
               {
                 let ord=ordenes[i];
-                obtenerDetalleOrden(ord,mesa,local,producto,function(error,ordenFull){
+                obtenerDetalleOrdenFull(ord,mesa,local,producto,function(error,ordenFull){
                   ordenesArray.push(ordenFull);
                   cont=cont+1;
                   if(cont==ordenes.length)
@@ -123,14 +123,14 @@ function Orden()
         });
       }
       /**
-      * Obtiene el detalle de la orden
+      * Obtiene el detalle de la orden de manera completa con sus subordenes
       * @param orden orden con todos sus campos simples
       * @param mesa  modelo para hacer consultas referentes a las mesas
       * @param local modelo para hacer consultas referentes al local
       * @param producto modelo para hacer consultas referentes al producto
       * @param callback función para comunicar el resultado
       */
-      this.obtenerDetalleOrden=function(orden,mesa,local,producto,callback)
+      this.obtenerDetalleOrdenFull=function(orden,mesa,local,producto,callback)
       {
         mesa.obtenerMesa(orden.mesa_id,function(error,ms)
         {
@@ -173,9 +173,10 @@ function Orden()
           * @param suborden suborden con los campos simples
           * @param local modelo para hacer consultas referentes a los locales
           * @param producto modelo para hacer consultas referentes a los productos
+          * @param mesa información de la mesa a la que esta asociada la suborden
           * @param callback función para comunicar el resultado
           */
-          this.obtenerDetalleSuborden=function(suborden,local,producto,callback)
+          this.obtenerDetalleSuborden=function(suborden,local,producto,mesa,callback)
           {
             local.obtenerLocal(suborden.local_id,function(error,lc)
             {
@@ -206,13 +207,13 @@ function Orden()
                       }
                       var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                         valor:suborden.valor,orden_id:suborden.orden_id,
-                        createdAt:suborden.createdAt,productos:productosFull};
+                        createdAt:suborden.createdAt,productos:productosFull,mesa:mesa};
                         callback(error,fullData);
                       }
                       else {
                         var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                           valor:suborden.valor,orden_id:suborden.orden_id,
-                          createdAt:orden.createdAt,productos:[]};
+                          createdAt:orden.createdAt,productos:[],mesa:mesa};
                           callback(error,fullData);
                         }
                       });
@@ -220,7 +221,7 @@ function Orden()
                     else {
                       var fullData={id:suborden.id,local:lc,estado_entrega:estadoEntrega,
                         valor:suborden.valor,orden_id:suborden.orden_id,
-                        createdAt:orden.createdAt,productos:[]};
+                        createdAt:orden.createdAt,productos:[],mesa:mesa};
                         callback(error,fullData);
                       }
                     });
@@ -257,7 +258,7 @@ function Orden()
                     }
                   });
                 }
-                /**
+                /**
                 * Actualiza el estado de la suborden
                 * @param idSuborden identificador de la suborden
                 * @param idEstado identificador del estado al que se va a modificar
@@ -293,4 +294,83 @@ function Orden()
                 }
                 return this;
               }
+              /**
+              * Obtiene las ordenes asociadas a los locales
+              * @param ids identificadores de los locales
+              * @param callback función para comunicar el resultado
+              */
+              this.obtenerOrdenesLocales=function(ids,callback)
+              {
+                db.Suborden.find({local_id:{$in:ids}},{orden_id:1},{sort:{orden_id:1}},function(error,ordenesIds)
+                {
+                  if(!error)
+                  {
+                    if(ordenesIds.length>0)
+                    {
+                      var newIds=new Array();
+                      for(var i=0;i<ordenesIds.length;i++)
+                      {
+                        if(newIds.indexOf(ordenesIds[i])==-1)
+                        {
+                          newIds.push(ordenesIds[i]);
+                        }
+                      }
+
+                    }
+                    else {
+                      callback(null,[]);
+                    }
+                  }
+                  else {
+                    callback(error,null);
+                  }
+
+                });
+              }
+              /**
+              * Obtiene el detalle de la orden de manera completa sin sus subordenes
+              * @param orden orden con todos sus campos simples
+              * @param mesa  modelo para hacer consultas referentes a las mesas
+              * @param local modelo para hacer consultas referentes al local
+              * @param producto modelo para hacer consultas referentes al producto
+              * @param callback función para comunicar el resultado
+              */
+              this.obtenerDetalleOrdenSimple=function(orden,mesa,local,producto,callback)
+              {
+                mesa.obtenerMesa(orden.mesa_id,function(error,ms)
+                {
+                  this.obtenerEstadoEntrega(orden.estado_entrega,function(error,estadoEntrega)
+                  {
+                    var cont=0;
+                    db.Suborden.find({orden_id:orden.id},{__v:0,_id:0},{sort:{id:1}},function(error,subordenes)
+                    {
+                      var subordenesArray=new Array();
+                      if(subordenes.length>0)
+                      {
+                        for(var i=0;i<subordenes.length;i++)
+                        {
+                          let suborden=subordenes[i];
+                          obtenerDetalleSuborden(suborden,local,producto,function(error,sbor)
+                          {
+                            cont=cont+1;
+                            subordenesArray.push(sbor);
+                            if(cont==subordenes.length)
+                            {
+                              var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
+                                mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:subordenesArray};
+                                callback(error,fullData);
+                              }
+                            });
+                          }
+                        }
+                        else {
+                          var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
+                            mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:[]};
+                            callback(error,fullData);
+                          }
+                        });
+                      });
+                    });
+
+                  }
               module.exports=Orden;
