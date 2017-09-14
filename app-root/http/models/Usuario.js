@@ -166,98 +166,100 @@ function Usuario()
             var em='j';
             var pa='123'
             var con=cifrarContrasenia(em,pa);
+            /**  var us=new db.Usuario({id:1,email:em,contrasenia:con,
+            permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});*/
             var us=new db.Usuario({id:1,email:em,contrasenia:con,
-            permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});
-            us.save(function(error,dta){
+              permisos:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],locales:[1]});
+              us.save(function(error,dta){
 
-            });
-            var em2='a';
-            var pa2='123'
-            var con2=cifrarContrasenia(em2,pa2);
-            var us2=new db.Usuario({id:2,email:em2,contrasenia:con2,
-            permisos:[17],locales:[1]});
-            us2.save(function(error,dta){
+              });
+              var em2='a';
+              var pa2='123'
+              var con2=cifrarContrasenia(em2,pa2);
+              var us2=new db.Usuario({id:2,email:em2,contrasenia:con2,
+                permisos:[17],locales:[1]});
+                us2.save(function(error,dta){
 
-            });
-            var em3='g';
-            var pa3='123'
-            var con3=cifrarContrasenia(em3,pa3);
-            var us3=new db.Usuario({id:3,email:em3,contrasenia:con3,
-            permisos:[18],locales:[1]});
+                });
+                var em3='g';
+                var pa3='123'
+                var con3=cifrarContrasenia(em3,pa3);
+                var us3=new db.Usuario({id:3,email:em3,contrasenia:con3,
+                  permisos:[18],locales:[1]});
 
-            us3.save(function(error,dta){
-            });
-          });
-          db.Local.remove({},function(error,dta)
-          {
-            var loc=new db.Local({id:1,nombre:"Carmentea",departamento:"Caldas",ciudad:"Manizales",
-            telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
-            loc.save(function(error,dta)
-            {
-
-            });
-          });
-        });
-      });
-
-    }
-    /**
-    * Cifra la contraseña que recibimos por parametro
-    * @param email   el email del usuario
-    * @param contrasenia   el password del usuario
-    */
-    this.cifrarContrasenia = function(email, contrasenia)
-    {
-      var crypto = require('crypto');
-      // usamos el metodo CreateHmac y le pasamos el parametro user y actualizamos el hash con la password
-      var hmac = crypto.createHmac('sha1', email).update(contrasenia).digest('hex');
-      return hmac;
-    }
-    /**
-    * Autentica un usuario en la aplicacion
-    * @param request  donde vienen los datos para autenticar el usuario
-    * @param callback  funcion para saber el estado de la autenticacion
-    */
-    this.auth = function(request, callback)
-    {
-      if (request.body.email)
-      {
-        if (request.body.contrasenia)
-        {
-          db.Usuario.findOne({email:request.body.email},{__v:0,_id:0}, function(error, user)
-          {
-            if (!error)
-            {
-              if (user)
-              {
-                var passwordCode = cifrarContrasenia(request.body.email, request.body.contrasenia);
-                if (passwordCode == user.contrasenia)
+                  us3.save(function(error,dta){
+                  });
+                });
+                db.Local.remove({},function(error,dta)
                 {
-                  var us=user.toObject();
-                  delete us.contrasenia;
-                  callback(null, {token: service.createToken(user), user: us});
-                }
-                else {
-                  callback({message:'Contraseña incorrecta',code:1}, null)
-                }
+                  var loc=new db.Local({id:1,nombre:"Carmentea",departamento:"Caldas",ciudad:"Manizales",
+                  telefono:"12345",direccion:"",createdAt:new Date(Date.now()),updatedAt:new Date(Date.now()),id:1});
+                  loc.save(function(error,dta)
+                  {
+
+                  });
+                });
+              });
+            });
+
+          }
+          /**
+          * Cifra la contraseña que recibimos por parametro
+          * @param email   el email del usuario
+          * @param contrasenia   el password del usuario
+          */
+          this.cifrarContrasenia = function(email, contrasenia)
+          {
+            var crypto = require('crypto');
+            // usamos el metodo CreateHmac y le pasamos el parametro user y actualizamos el hash con la password
+            var hmac = crypto.createHmac('sha1', email).update(contrasenia).digest('hex');
+            return hmac;
+          }
+          /**
+          * Autentica un usuario en la aplicacion
+          * @param request  donde vienen los datos para autenticar el usuario
+          * @param callback  funcion para saber el estado de la autenticacion
+          */
+          this.auth = function(request, callback)
+          {
+            if (request.body.email)
+            {
+              if (request.body.contrasenia)
+              {
+                db.Usuario.findOne({email:request.body.email},{__v:0,_id:0}, function(error, user)
+                {
+                  if (!error)
+                  {
+                    if (user)
+                    {
+                      var passwordCode = cifrarContrasenia(request.body.email, request.body.contrasenia);
+                      if (passwordCode == user.contrasenia)
+                      {
+                        var us=user.toObject();
+                        delete us.contrasenia;
+                        callback(null, {token: service.createToken(user), user: us});
+                      }
+                      else {
+                        callback({message:'Contraseña incorrecta',code:1}, null)
+                      }
+                    }
+                    else {
+                      callback({message:'Usuario no encontrado',code:3}, null);
+                    }
+                  }
+                  else {
+                    callback(error, user);
+                  }
+                });
               }
               else {
-                callback({message:'Usuario no encontrado',code:3}, null);
+                callback({message:'Contraseña vacia',code:4}, null);
               }
             }
             else {
-              callback(error, user);
+              callback({message:'Correo vacio',code:5}, null);
             }
-          });
+          }
+          return this;
         }
-        else {
-          callback({message:'Contraseña vacia',code:4}, null);
-        }
-      }
-      else {
-        callback({message:'Correo vacio',code:5}, null);
-      }
-    }
-    return this;
-  }
-  module.exports=Usuario;
+        module.exports=Usuario;

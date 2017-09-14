@@ -9,7 +9,8 @@ exports.createToken = function(user) {
     var payload = {
         sub: user.email,
         iat: moment().unix(),
-        id_tipo_usuario: user.id_tipo_usuario,
+        locales:user.locales,
+        permisos:user.permisos,
         id: user.id,
         exp: moment().add(2, "days").unix(),
         pathImage:user.pathImage || '/images/users/user-placeholder.png'

@@ -67,7 +67,7 @@ exports.actualizarSubcategoria=function(request,response)
   form.parse(request, function(err, fields, files) {
     if(!err)
     {
-      subcategoria.actualizarCliente(request.params.id,files,fields,function(error,code,data)
+      subcategoria.actualizarSubcategoria(request.params.id,files,fields,function(error,code,data)
       {
         if(error)
         {
@@ -142,6 +142,26 @@ exports.obtenerSubcategoria=function(request,response)
     else
     {
       response.status(code).send({error: error.message});
+    }
+  });
+}
+/**
+* Controla la obteneción de las subcategorias de un local
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerSubcategoriasDeLocal=function(request,response)
+{
+  var subcategoria= require('../models/Subcategoria.js')();
+  subcategoria.obtenerSubcategoriasDeLocal(request.params.id,function(error,data)
+  {
+    if (!error)
+    {
+      response.status(200).send(data);
+    }
+    else
+    {
+      response.status(400).send({error: error.message});
     }
   });
 }
