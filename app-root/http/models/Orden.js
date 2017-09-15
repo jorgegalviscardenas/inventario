@@ -310,12 +310,44 @@ function Orden()
                       var newIds=new Array();
                       for(var i=0;i<ordenesIds.length;i++)
                       {
-                        if(newIds.indexOf(ordenesIds[i])==-1)
+                        if(newIds.indexOf(ordenesIds[i].orden_id)==-1)
                         {
-                          newIds.push(ordenesIds[i]);
+                          newIds.push(ordenesIds[i].orden_id);
                         }
                       }
-
+                      var newOrdenes=new Array();
+                      db.Orden.find({id:{$in:newIds}},{__v:0,_id:0},{sort:{estado_entrega:1}},function(error,ordenes)
+                      {
+                        if(!error)
+                        {
+                          if(ordenes.length>0)
+                          {
+                            var cont=0;
+                            var mesa=require('./Mesa.js')();
+                            for(var i=0;i<ordenes.length;i++)
+                            {
+                              obtenerDetalleOrdenSimple(ordenes[i],mesa,function(error,orden)
+                              {
+                                newOrdenes.push(orden);
+                                cont++;
+                                if(cont==ordenes.length)
+                                {
+                                  newOrdenes.sort(function(a, b) {
+                                    return a.estado_entrega- b.estado_entrega;
+                                  });
+                                  callback(null,newOrdenes);
+                                }
+                              });
+                            }
+                          }
+                          else {
+                            callback(error,ordenes);
+                          }
+                        }
+                        else {
+                          callback(error,null);
+                        }
+                      });
                     }
                     else {
                       callback(null,[]);
@@ -331,46 +363,84 @@ function Orden()
               * Obtiene el detalle de la orden de manera completa sin sus subordenes
               * @param orden orden con todos sus campos simples
               * @param mesa  modelo para hacer consultas referentes a las mesas
-              * @param local modelo para hacer consultas referentes al local
-              * @param producto modelo para hacer consultas referentes al producto
               * @param callback función para comunicar el resultado
               */
-              this.obtenerDetalleOrdenSimple=function(orden,mesa,local,producto,callback)
+              this.obtenerDetalleOrdenSimple=function(orden,mesa,callback)
               {
                 mesa.obtenerMesa(orden.mesa_id,function(error,ms)
                 {
                   this.obtenerEstadoEntrega(orden.estado_entrega,function(error,estadoEntrega)
                   {
-                    var cont=0;
-                    db.Suborden.find({orden_id:orden.id},{__v:0,_id:0},{sort:{id:1}},function(error,subordenes)
+                    var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
+                      mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt};
+                      callback(error,fullData);
+                    });
+                  });
+
+                }
+                /**
+                * Obtiene las subordenes asociadas a los locales, pero con
+                * los datos básicos
+                * @param ids  identificadores de los locales
+                * @param callback función para comunicar el resultado
+                */
+                this.obtenerSubordenesLocales=function(ids,callback)
+                {
+                  db.Suborden.find({local_id:{$in:ids}},{__v:0,_id:0},
+                    {sort:{estado_entrega:1}},function(error,subordenes)
                     {
-                      var subordenesArray=new Array();
-                      if(subordenes.length>0)
+                      if(!error)
                       {
-                        for(var i=0;i<subordenes.length;i++)
+                        if(subordenes.length>0)
                         {
-                          let suborden=subordenes[i];
-                          obtenerDetalleSuborden(suborden,local,producto,function(error,sbor)
+                          var newSubordenes=new Array();
+                          var cont=0;
+                          var mesa=require('./Mesa.js')();
+                          for(var i=0;i<subordenes.length;i++)
                           {
-                            cont=cont+1;
-                            subordenesArray.push(sbor);
-                            if(cont==subordenes.length)
-                            {
-                              var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
-                                mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:subordenesArray};
-                                callback(error,fullData);
-                              }
-                            });
+                            obtenerDetalleSubordenSimple(subordenes[i],mesa,
+                              function(error,suborden)
+                              {
+                                newSubordenes.push(suborden);
+                                cont++;
+                                if(cont==subordenes.length)
+                                {
+                                  newSubordenes.sort(function(a, b) {
+                                    return a.estado_entrega- b.estado_entrega;
+                                  });
+                                  callback(null,newSubordenes);
+                                }
+                              });
+                            }
+                          }
+                          else {
+                            callback(null,[]);
                           }
                         }
                         else {
-                          var fullData={id:orden.id,telefono:orden.telefono,pago:orden.pago,
-                            mesa:ms,estado_entrega:estadoEntrega,createdAt:orden.createdAt,ordenes:[]};
-                            callback(error,fullData);
-                          }
-                        });
+                          callback(error,null);
+                        }
                       });
-                    });
-
-                  }
-              module.exports=Orden;
+                    }
+                    /**
+                    * Obtiene el detalle de una suborden pero con su datos basicos
+                    * @param suborden suborden con datos imples
+                    * @param mesa modelo para hacer consultas sobre las mesas
+                    * @param callback función para comunicar el resultado
+                    */
+                    this.obtenerDetalleSubordenSimple=function(suborden,mesa,callback)
+                    {
+                      mesa.obtenerMesa(suborden.mesa_id,function(error,ms)
+                      {
+                        this.obtenerEstadoEntrega(suborden.estado_entrega,function(error,estadoEntrega)
+                        {
+                          var fullData={id:suborden.id,estado_entrega:estadoEntrega,
+                            valor:suborden.valor,orden_id:suborden.orden_id,
+                            createdAt:suborden.createdAt,mesa:ms};
+                            callback(error,fullData);
+                          });
+                        });
+                      }
+                      return this;
+                    }
+                    module.exports=Orden;
