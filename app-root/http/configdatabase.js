@@ -219,7 +219,8 @@ var conexion = function()
     mesa_id:{type:Number,ref:'mesa'},
     pago:{type:Boolean,default:false},
     estado_entrega:{type:Number,ref:'estadoentrega',default:1},
-    createdAt:{type:Date,default:new Date(Date.now())}
+    createdAt:{type:Date,default:new Date(Date.now())},
+    updatedAt:{type:Date,default:new Date(Date.now())}
   });
   ordenSchema.plugin(autoIncrement.plugin, {model: 'orden', field: 'id', startAt: 5});
   var modelOrden=connection.model('orden',ordenSchema);
@@ -232,7 +233,8 @@ var conexion = function()
     orden_id:{type:Number,ref:'orden'},
     mesa_id:{type:Number,ref:'mesa'},
     telefono:{type:String,default:''},
-    createdAt:{type:Date,default:new Date(Date.now())}
+    createdAt:{type:Date,default:new Date(Date.now())},
+    updatedAt:{type:Date,default:new Date(Date.now())}
   });
   subordenSchema.plugin(autoIncrement.plugin, {model: 'suborden', field: 'id', startAt: 5});
   var modelSuborden=connection.model('suborden',subordenSchema);
