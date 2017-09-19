@@ -231,6 +231,7 @@ var conexion = function()
     valor:{type:Number,default:0.0},
     orden_id:{type:Number,ref:'orden'},
     mesa_id:{type:Number,ref:'mesa'},
+    telefono:{type:String,default:''},
     createdAt:{type:Date,default:new Date(Date.now())}
   });
   subordenSchema.plugin(autoIncrement.plugin, {model: 'suborden', field: 'id', startAt: 5});

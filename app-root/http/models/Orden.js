@@ -21,6 +21,7 @@ function Orden()
             cont =0;
             var subordenes=new Array();
             var producto=require('./Producto.js')();
+            var notificacion=require('./Notificacion.js')();
             for(var i=0;i<data.ordenes.length;i++)
             {
               var ids=new Array();
@@ -38,7 +39,7 @@ function Orden()
                 }
                 var suborden=new db.Suborden({productos:sbor.productos,
                   local_id:sbor.local,estado_entrega:1,valor:total,mesa_id:data.mesa,
-                  orden_id:dataOrden.id,createdAt:new Date(Date.now())});
+                  orden_id:dataOrden.id,createdAt:new Date(Date.now()),telefono:data.telefono});
                   suborden.save(function(error,dataSuborden)
                   {
                     subordenes.push(dataSuborden);
@@ -51,7 +52,16 @@ function Orden()
                       obtenerDetalleOrdenFull(dataOrden,mesa,local,producto,function(error,ordenFull)
                       {
                         callback(error,ordenFull);
+                        for(var m=0;m<ordenFull.ordenes.length;m++)
+                        {
+                          notificacion.enviarNotificacionOrdenLocal('local-orden:creada',
+                          ordenFull.ordenes[m],ordenFull.ordenes[m].local.id,function(error,data)
+                          {
+                            console.log(error);
+                          });
+                        }
                       });
+
                     }
                   });
                 });
@@ -274,7 +284,14 @@ function Orden()
                       {
                         db.Suborden.update({id:idSuborden},{$set:{estado_entrega:idEstado}},function(error,data)
                         {
-                          callback(error,200,data);
+                          suborden.estado_entrega=idEstado;
+                          callback(error,200,suborden);
+                          var notificacion=require('./Notificacion.js')();
+                          notificacion.enviarNotificacionOrdenCliente('cliente-orden:actualizada',
+                          suborden,'3122410155',function(error,data)
+                          {
+                            console.log(error);
+                          });
                           db.Suborden.findOne({orden_id:suborden.orden_id},{estado_entrega:1},{sort:{estado_entrega:1}},function(error,dta)
                           {
                             db.Orden.update({id:suborden.orden_id},{$set:{estado_entrega:dta.estado_entrega}},function(error,data)
@@ -403,7 +420,7 @@ function Orden()
                                   cont++;
                                   if(cont==subordenes.length)
                                   {
-                                   newSubordenes.sort(function(a, b) {
+                                    newSubordenes.sort(function(a, b) {
                                       return (a.estado_entrega-b.estado_entrega);
                                     });
                                     callback(null,newSubordenes);
