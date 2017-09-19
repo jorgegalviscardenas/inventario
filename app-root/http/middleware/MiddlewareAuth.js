@@ -15,11 +15,8 @@ exports.ensureAuthenticated = function(req, res, next) {
     .send({error: "unauthorized"});
   }
   var payload = service.decodeToken(req);
-
   if (payload.exp <= moment().unix()) {
-    return res
-    .status(401)
-    .send({message: "token expired"});
+    return res.status(401).send({message: "token expired"});
   }
 
   req.user = payload.sub;

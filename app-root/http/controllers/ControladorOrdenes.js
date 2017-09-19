@@ -74,3 +74,47 @@ exports.actualizarEstadoSuborden=function(request,response)
     }
   });
 }
+/**
+* Controla la obtención de las ordenes asociadas a un arreglo de locales,
+* que corresponde a los locales del usuario en sesión
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerOrdenesLocales=function(request,response)
+{
+  var service = require('../models/service.js');
+  var payload = service.decodeToken(request);
+  var orden= require('../models/Orden.js')();
+  orden.obtenerOrdenesLocales(payload.locales,function(error,ordenes)
+  {
+    if(!error)
+    {
+      response.status(200).send(ordenes);
+    }
+    else {
+      response.status(400).send(error);
+    }
+  });
+}
+/**
+* Controla la obtención de las subordenes asociadas a un arreglo de locales,
+* que corresponde a los locales del usuario en sesión
+* @param {type} request donde viene los datos para la consulta
+* @param {type} response para dar respuesta a la peticion
+*/
+exports.obtenerSubordenesLocales=function(request,response)
+{
+  var service = require('../models/service.js');
+  var payload = service.decodeToken(request);
+  var orden= require('../models/Orden.js')();
+  orden.obtenerSubordenesLocales(payload.locales,function(error,subordenes)
+  {
+    if(!error)
+    {
+      response.status(200).send(subordenes);
+    }
+    else {
+      response.status(400).send(error);
+    }
+  });
+}

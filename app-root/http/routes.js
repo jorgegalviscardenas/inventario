@@ -70,6 +70,8 @@ router.get('/empresas/:id/mesas',middlewareAuth.ensureAuthenticated,mesasCtrl.ob
 router.put('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.actualizarMesa);
 router.delete('/empresas/:idEmpresa/mesas/:idMesa',middlewareAuth.ensureAuthenticated,mesasCtrl.eliminarMesa);
 //ordenes
+router.get('/ordenes',middlewareAuth.ensureAuthenticated,ordenesCtrl.obtenerOrdenesLocales);
+router.get('/subordenes',middlewareAuth.ensureAuthenticated,ordenesCtrl.obtenerSubordenesLocales);
 router.put('/ordenes/:id/estado',middlewareAuth.ensureAuthenticated,ordenesCtrl.actualizarEstadoOrden);
 router.put('/subordenes/:id/estado',middlewareAuth.ensureAuthenticated,ordenesCtrl.actualizarEstadoSuborden);
 //////////////////////-------CLIENTES----------///////////////////////////////////////
@@ -109,7 +111,7 @@ router.get('/restart',function(request,response)
 });
 router.get('/estadoEntrega',function(request,response)
 {
-  db.EstadoEntrega.remove(function(e,d)
+  db.EstadoEntrega.remove({},function(e,d)
   {
     var e1=new db.EstadoEntrega({nombre:"Pendiente por recibir",id:1});
     e1.save(function(error,dt)

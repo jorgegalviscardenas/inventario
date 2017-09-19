@@ -145,7 +145,7 @@ var conexion = function()
   var categoriaSchema = new Schema({
     nombre: {type:String,default:''},
     id_local:{type:Number,ref:'local'},
-    ruta_imagen:{type:String,default:'categorias/imagenPorDefecto.png'},
+    ruta_imagen:{type:String,default:'categorias/imagenPorDefecto.jpg'},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
@@ -156,7 +156,7 @@ var conexion = function()
     nombre: {type:String,default:''},
     id_local:{type:Number,ref:'local'},
     id_categoria:{type:Number,ref:'categoria'},
-    ruta_imagen:{type:String,default:'subcategorias/imagenPorDefecto.png'},
+    ruta_imagen:{type:String,default:'subcategorias/imagenPorDefecto.jpg'},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
   });
@@ -173,7 +173,7 @@ var conexion = function()
     presentacion:{type:String,default:''},
     minima_inventario:{type:Number,default:10},
     activo:{type:Boolean,default:true},
-    ruta_imagen:{type:String,default:'productos/imagenPorDefecto.png'},
+    ruta_imagen:{type:String,default:'productos/imagenPorDefecto.jpg'},
     id_local:{type:Number,ref:'local'},
     createdAt: {type: Date, default: Date.now()},
     updatedAt: {type: Date, default: Date.now()}
