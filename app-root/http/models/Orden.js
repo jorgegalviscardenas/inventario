@@ -476,7 +476,7 @@ function Orden()
                                   {
                                     db.Orden.findOne({id:id},function(error,orden)
                                     {
-                                      if(!error)
+                                      if(error)
                                       {
                                         callback(error,400,null);
                                       }
@@ -513,7 +513,7 @@ function Orden()
                                     {
                                       db.Suborden.findOne({id:id},function(error,suborden)
                                       {
-                                        if(!error)
+                                        if(error)
                                         {
                                           callback(error,400,null);
                                         }
@@ -551,29 +551,34 @@ function Orden()
                                         var local=require('./Local.js')();
                                         var producto=require('./Producto.js')();
                                         var mesa=require('./Mesa.js')();
-                                        obtenerDetalleSubordenFull(suborden,local,producto,mesa,
-                                          function(error,dataSuborden)
-                                          {
-                                            var notificacion=require('./Notificacion.js')();
-                                            notificacion.enviarNotificacionOrdenLocal('local-orden:actualizada',
-                                            dataSuborden,suborden.local_id,MANEJAR_ORDEN,function(error,data)
+                                        var notificacion=require('./Notificacion.js')();
+                                        mesa.obtenerMesa(suborden.mesa_id,function(error,ms)
+                                        {
+                                          obtenerDetalleSubordenFull(suborden,local,producto,ms,
+                                            function(error,dataSuborden)
                                             {
-                                            });
-                                            if(suborden.estado_entrega==4)
-                                            {
-                                              notificacion.enviarNotificacionOrdenLocal('mesero-orden:actualizada',
-                                              dataSuborden,suborden.local_id,ENTREGAR_ORDEN,function(error,data)
+                                              notificacion.enviarNotificacionOrdenLocal('local-orden:actualizada',
+                                              dataSuborden,suborden.local_id,MANEJAR_ORDEN,function(error,data)
                                               {
                                               });
-                                            }
+                                              if(suborden.estado_entrega==4)
+                                              {
+                                                notificacion.enviarNotificacionOrdenLocal('mesero-orden:actualizada',
+                                                dataSuborden,suborden.local_id,ENTREGAR_ORDEN,function(error,data)
+                                                {
+                                                });
+                                              }
+                                            });
                                           });
                                           obtenerOrden(suborden.orden_id,function(error,code,dataOrden)
                                           {
                                             if(!error)
                                             {
+
                                               notificacion.enviarNotificacionOrdenCliente('cliente-orden:actualizada',
-                                              {orden:dataOrden,suborden:suborden.id},dataSuborden.telefono,function(error,data)
+                                              {orden:dataOrden,suborden:suborden.id},dataOrden.telefono,function(error,data)
                                               {
+
                                               });
                                             }
                                           });

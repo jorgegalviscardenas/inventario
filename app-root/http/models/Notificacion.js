@@ -17,20 +17,19 @@ function Notificacion()
   this.enviarNotificacionOrdenLocal=function(evento,recurso,idLocal,idPermiso,callback)
   {
     var cant=0;
+    var locales;
+    var permisos;
+    console.log(idLocal);
+    console.log(idPermiso);
     for(var socket in io.sockets.sockets)
     {
       if(io.sockets.sockets[socket].request._query.locales && io.sockets.sockets[socket].request._query.permisos)
       {
-        var locales=JSON.parse(io.sockets.sockets[socket].request._query.locales);
-        var permisos=JSON.parse(io.sockets.sockets[socket].request._query.permisos);
-        if(locales.indexOf(idLocal)!=-1)
-        {
-          if(permisos.indexOf(idPermiso)!=-1)
-          {
-            io.sockets.sockets[socket].emit(evento,recurso);
-            cant=cant+1;
-          }
-        }
+        locales=[1];
+        permisos=[17,18];
+        io.sockets.sockets[socket].emit(evento,recurso);
+        cant=cant+1;
+        
       }
     }
     if(cant>0)
