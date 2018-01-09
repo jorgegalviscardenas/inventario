@@ -34,6 +34,9 @@ var conexion = function()
   if (process.env.OPENSHIFT_MONGODB_DB_URL) {
     connection_string = process.env.OPENSHIFT_MONGODB_DB_URL;
   }
+  console.log(connection_string);
+  console.log(process.env.OPENSHIFT_MONGODB_DB_URL);
+  console.log(process.env.MONGO_URL);
   /**
   * Conexión con la base de datos
   */
