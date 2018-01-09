@@ -28,11 +28,27 @@ var conexion = function()
 
   connection_string ="mongodb://"+ configDB.HOST +':'+configDB.PORT + '/' + configDB.DB_NAME;
 
-  /**Configuracion de variables de un servidor, en este caso si se prueba en openshift
-  *
+  var mongoUrl=process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
+  /**
+  * Configuracion de variables de un servidor, en este caso si se prueba en openshift
   */
-  if (process.env.OPENSHIFT_MONGODB_DB_URL) {
-    connection_string = process.env.OPENSHIFT_MONGODB_DB_URL;
+  if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
+    var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
+        mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
+        mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
+        mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
+        mongoPassword = process.env[mongoServiceName + '_PASSWORD']
+        mongoUser = process.env[mongoServiceName + '_USER'];
+
+    if (mongoHost && mongoPort && mongoDatabase) {
+      connection_string = 'mongodb://';
+      if (mongoUser && mongoPassword) {
+        connection_string += mongoUser + ':' + mongoPassword + '@';
+      }
+      // Provide UI label that excludes user id and pw
+      connection_string += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
+
+    }
   }
   console.log(connection_string);
   console.log(process.env.OPENSHIFT_MONGODB_DB_URL);
