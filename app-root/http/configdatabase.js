@@ -28,11 +28,11 @@ var conexion = function()
 
   connection_string ="mongodb://"+ configDB.HOST +':'+configDB.PORT + '/' + configDB.DB_NAME;
 
-  var mongoUrl=process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
+  var mongoose-auto-incrementl=process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL;
   /**
   * Configuracion de variables de un servidor, en este caso si se prueba en openshift
   */
-  if (mongoURL == null && process.env.DATABASE_SERVICE_NAME) {
+  if (mongoUrl == null && process.env.DATABASE_SERVICE_NAME) {
     var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
         mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'],
         mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'],
