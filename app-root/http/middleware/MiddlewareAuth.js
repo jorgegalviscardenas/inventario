@@ -14,13 +14,19 @@ exports.ensureAuthenticated = function(req, res, next) {
     .status(403)
     .send({error: "unauthorized"});
   }
-  var payload = service.decodeToken(req);
-  if (payload.exp <= moment().unix()) {
-    return res.status(401).send({message: "token expired"});
+  try{
+    var payload = service.decodeToken(req);
+    if (payload.exp <= moment().unix()) {
+      return res.status(401).send({message: "token expired"});
+    }
+
+    req.user = payload.sub;
+    next();
+  }catch(err)
+  {
+    return res.status(401).send({message: err.message});
   }
 
-  req.user = payload.sub;
-  next();
 }
 /**
 * Asegura que quien hace determinado peticion este autenticado
@@ -34,16 +40,21 @@ exports.ensureAuthenticatedToken = function(req, res, next) {
     .status(403)
     .send({error: "unauthorized"});
   }
-  var payload = service.decodeTokenFromToken(req.session.token);
+  try{
+    var payload = service.decodeTokenFromToken(req.session.token);
 
-  if (payload.exp <= moment().unix()) {
-    return res
-    .status(401)
-    .send({message: "token expired"});
+    if (payload.exp <= moment().unix()) {
+      return res
+      .status(401)
+      .send({message: "token expired"});
+    }
+
+    req.user = payload.sub;
+    next();
+  }catch(err)
+  {
+    return res.status(401).send({message: err.message});
   }
-
-  req.user = payload.sub;
-  next();
 }
 /**
 * Asegura que quien hace determinado peticion este autenticado

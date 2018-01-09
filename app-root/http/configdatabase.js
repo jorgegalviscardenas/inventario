@@ -26,23 +26,19 @@ var conexion = function()
     }
   }
 
-  connection_string = configDB.HOST +':'+configDB.PORT + '/' + configDB.DB_NAME;
+  connection_string ="mongodb://"+ configDB.HOST +':'+configDB.PORT + '/' + configDB.DB_NAME;
 
   /**Configuracion de variables de un servidor, en este caso si se prueba en openshift
   *
   */
-  if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
-    connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
-    process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
-    process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
-    process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
-    process.env.OPENSHIFT_APP_NAME;
+  if (process.env.OPENSHIFT_MONGODB_DB_URL) {
+    connection_string = process.env.OPENSHIFT_MONGODB_DB_URL;
   }
   /**
   * Conexión con la base de datos
   */
   //  var connection = mongo.createConnection("mongodb://" + connection_string);
-  var connection = mongo.connect("mongodb://" + connection_string);
+  var connection = mongo.connect(connection_string);
   /**
   * Schema para crear las colecciones en la base de datos
   */
