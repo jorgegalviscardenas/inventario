@@ -51,9 +51,6 @@ var conexion = function()
     }
   }
   console.log(connection_string);
-  console.log(process.env.OPENSHIFT_MONGODB_DB_URL);
-  console.log(process.env.MONGO_URL);
-  console.log(process.env.DATABASE_SERVICE_NAME);
   /**
   * Conexión con la base de datos
   */
