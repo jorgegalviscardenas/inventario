@@ -222,4 +222,8 @@ router.get('/resetpermisos',function(request,response)
   permiso.save(function(e,d){});
   response.status(200).send({});
 });
+router.get('/pagecount', function (req, res) {
+  res.send('{ pageCount: 1 }');
+
+});
 module.exports = router;
