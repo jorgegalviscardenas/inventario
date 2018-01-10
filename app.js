@@ -40,3 +40,4 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
 http.listen(port, ip, function() {
     console.log('Application worker started...');
 });
+module.exports=http;
