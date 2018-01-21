@@ -19,8 +19,6 @@ function Notificacion()
     var cant=0;
     var locales;
     var permisos;
-    console.log(idLocal);
-    console.log(idPermiso);
     for(var socket in io.sockets.sockets)
     {
       if(io.sockets.sockets[socket].request._query.locales && io.sockets.sockets[socket].request._query.permisos)
@@ -29,7 +27,7 @@ function Notificacion()
         permisos=[17,18];
         io.sockets.sockets[socket].emit(evento,recurso);
         cant=cant+1;
-        
+
       }
     }
     if(cant>0)

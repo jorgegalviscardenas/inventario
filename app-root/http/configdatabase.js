@@ -261,6 +261,20 @@ var conexion = function()
   comentarioSchema.plugin(autoIncrement.plugin, {model: 'comentario', field: 'id', startAt: 1});
   var modelComentario=connection.model('comentario',comentarioSchema);
   ////////////////////////////////////////////////////////////////////////////
+  var telefonoSocketSchema=new Schema({
+    telefono:{type:String},
+    id_socket:{type:String,default:''},
+    updatedAt:{type:Date,default:new Date(Date.now())}
+  });
+  var modelTelefonoSocket=connection.model('telefonosocket',telefonoSocketSchema);
+  ////////////////////////////////////////////////////////////////////////////
+  var usuarioSocketSchema=new Schema({
+    id_usuario:{type:Number},
+    id_socket:{type:String,default:''},
+    updatedAt:{type:Date,default:new Date(Date.now())}
+  });
+  var modelUsuarioSocket=connection.model('usuariosocket',usuarioSocketSchema);
+  ////////////////////////////////////////////////////////////////////////////
   /**
   * Este objeto global, va servir para acceder a todos los modelos creados en
   * la base de datos
@@ -283,7 +297,9 @@ var conexion = function()
     EstadoEntrega:modelEstadoEntrega,
     Orden:modelOrden,
     Suborden:modelSuborden,
-    Comentario:modelComentario
+    Comentario:modelComentario,
+    TelefonoSocket:modelTelefonoSocket,
+    UsuarioSocket:modelUsuarioSocket
     // agregar más modelos aquí en caso de haberlos
   };
 }
